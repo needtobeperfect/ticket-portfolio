@@ -1400,7 +1400,7 @@ const PASSWORD = 'JovByHuv1111';
 // Backend URL: lokálne → '/api', GitHub Pages → Railway URL
 const API_URL  = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? '/api'
-  : 'https://script.google.com/macros/s/AKfycbzTV0jGZPEsCi1ztDyAaS0anVCDF5TGi64h9925puC9xpmgyZOnmYx5usaayo4BeLxv/exec';
+  : 'https://script.google.com/macros/s/AKfycbzcK1-bNWmqb7Y85SJzyK6BfX8ixnyUl9hnvQcVw9vVrKioJ0sVmACiEDKaOg2b5Sy4/exec';
 
 /* ----------------------------------------------------------------
    APP STATE
@@ -1832,8 +1832,7 @@ function renderTicketsTable(tickets) {
     const roi    = parseFloat(t.roi)    || 0;
     const pCls   = profit >= 0 ? 'text-green' : 'text-red';
     const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
-    // Safely stringify rowIndex for onclick attribute
-    const ri = JSON.stringify(String(t.rowIndex ?? ''));
+    const ri = parseInt(t.rowIndex) || 0;
     return `
       <tr>
         <td class="text-muted font-mono" style="font-size:.75rem;">${esc(t.num ?? t.rowIndex ?? '—')}</td>

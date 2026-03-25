@@ -39,16 +39,28 @@ function readSheet() {
   var dataRows = [];
   var totalRowIndex = -1;
 
+  var lastNonEmptySheetRow = 0;
+
   for (var i = 1; i < data.length; i++) {
     var r   = data[i];
     var raw = String(r[0] || '').trim();
     if (raw === '') continue;
 
+    var currentSheetRow = i + 1;
+
+    // If there is a large gap (>10 rows) since the last non-empty col-A row,
+    // we have left the ticket block — treat this as the TOTAL/summary section.
+    if (lastNonEmptySheetRow > 0 && (currentSheetRow - lastNonEmptySheetRow) > 10) {
+      if (totalRowIndex === -1) totalRowIndex = currentSheetRow;
+      break;
+    }
+    lastNonEmptySheetRow = currentSheetRow;
+
     var num = parseInt(raw, 10);
     if (!isNaN(num) && num > 0 && String(num) === raw) {
-      dataRows.push({ sheetRow: i + 1, data: r });
+      dataRows.push({ sheetRow: currentSheetRow, data: r });
     } else {
-      if (totalRowIndex === -1) totalRowIndex = i + 1;
+      if (totalRowIndex === -1) totalRowIndex = currentSheetRow;
     }
   }
   return { dataRows: dataRows, totalRowIndex: totalRowIndex };
@@ -82,16 +94,14 @@ function getDashboard() {
 
   for (var i = 0; i < dataRows.length; i++) {
     var r      = dataRows[i].data;
-    var nakup  = clean(r[8]);
-    var predaj = clean(r[9]);
-    var ks     = parseInt(r[5], 10) || 0;
+    var nakup  = clean(r[8]);   // total invested for this row (already includes qty)
+    var predaj = clean(r[9]);   // total revenue for this row
+    var ks     = parseInt(r[5], 10) || 1;
     var status = String(r[13] || '').trim();
 
-    var totalNakup  = nakup  * ks;
-    var totalPredaj = predaj * ks;
-    totalInvested += totalNakup;
+    totalInvested += nakup;
 
-    var rowProfit = predaj > 0 ? round2(totalPredaj - totalNakup) : 0;
+    var rowProfit = predaj > 0 ? round2(predaj - nakup) : 0;
     var rowRoi    = nakup > 0 && predaj > 0
                     ? round1((predaj - nakup) / nakup * 100) : 0;
 
@@ -99,17 +109,17 @@ function getDashboard() {
       artist:   String(r[1] || ''),
       country:  String(r[2] || ''),
       qty:      ks,
-      invested: round2(totalNakup),
-      revenue:  round2(totalPredaj),
+      invested: round2(nakup),
+      revenue:  round2(predaj),
       profit:   rowProfit,
       roi:      rowRoi,
       status:   status || (predaj > 0 ? 'SOLD' : 'ACTIVE')
     });
 
     if (predaj > 0) {
-      totalRevenue += totalPredaj;
+      totalRevenue += predaj;
       ticketsSold  += ks;
-      soldInvested += totalNakup;
+      soldInvested += nakup;
     } else {
       activeEvents++;
     }

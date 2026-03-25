@@ -1,571 +1,2114 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TicketDesk · Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#0A1628; --navy2:#0F2040; --navy3:#162A50;
-  --blue:#1565C0; --blue2:#1976D2; --blue3:#42A5F5;
-  --light:#E8F2FF; --pale:#F4F8FF; --border:#C5D8F5;
-  --white:#FFFFFF; --dark:#0D1B2A; --mid:#4A6080; --soft:#8AA0BC;
-  --green:#0D7A3E; --greenbg:#E6F7EE; --greenborder:#A8DBBE;
-  --red:#C0392B; --redbg:#FDF0EE; --redborder:#F5B7B1;
-  --amber:#B7670A; --amberbg:#FEF9E7; --amberborder:#F9D978;
-  --purple:#5C35B0; --purplebg:#EDE8FB;
-  --shadow0:0 1px 3px rgba(10,22,40,.08);
-  --shadow1:0 4px 16px rgba(10,22,40,.10);
-  --shadow2:0 8px 32px rgba(10,22,40,.14);
-  --r:10px; --r2:14px; --r3:20px;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--pale);color:var(--dark);}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TicketDesk — Portfolio Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-/* ═══════════ LOGIN ═══════════ */
-#loginWrap{
-  display:flex;height:100vh;
-}
-.login-left{
-  flex:1;background:var(--navy);display:flex;flex-direction:column;
-  justify-content:center;padding:60px;position:relative;overflow:hidden;
-}
-.login-left::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 60%,rgba(21,101,192,.35) 0%,transparent 60%),
-             radial-gradient(ellipse at 80% 20%,rgba(66,165,245,.2) 0%,transparent 50%);
-}
-.login-brand{position:relative;z-index:1;}
-.login-brand-icon{font-size:40px;margin-bottom:20px;}
-.login-brand-name{font-size:36px;font-weight:900;color:var(--white);letter-spacing:-1px;}
-.login-brand-sub{font-size:14px;color:var(--blue3);margin-top:6px;font-weight:500;}
-.login-stats{position:relative;z-index:1;margin-top:60px;display:flex;gap:32px;}
-.login-stat-val{font-size:28px;font-weight:800;color:var(--white);}
-.login-stat-lbl{font-size:11px;color:var(--soft);margin-top:2px;font-weight:500;text-transform:uppercase;letter-spacing:.8px;}
-.login-deco{
-  position:absolute;right:-80px;top:50%;transform:translateY(-50%);
-  width:400px;height:400px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.06);
-}
-.login-deco::after{
-  content:'';position:absolute;inset:40px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.04);
-}
+  <style>
+    /* ================================================================
+       RESET & CSS CUSTOM PROPERTIES
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.login-right{
-  width:480px;display:flex;align-items:center;justify-content:center;
-  background:var(--white);padding:60px 48px;
-}
-.login-form-wrap{width:100%;}
-.login-hello{font-size:26px;font-weight:800;color:var(--dark);margin-bottom:6px;}
-.login-hint{font-size:14px;color:var(--mid);margin-bottom:36px;}
-.login-label{font-size:11px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
-.login-input{
-  width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:var(--r);
-  font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:.2s;
-  background:var(--pale);color:var(--dark);
-}
-.login-input:focus{border-color:var(--blue);background:var(--white);}
-.login-btn{
-  width:100%;margin-top:20px;padding:15px;background:var(--blue);
-  color:var(--white);border:none;border-radius:var(--r);font-size:15px;
-  font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:.2s;
-  letter-spacing:.3px;
-}
-.login-btn:hover{background:var(--blue2);box-shadow:0 6px 20px rgba(21,101,192,.35);}
-.login-err{color:var(--red);font-size:13px;margin-top:12px;text-align:center;display:none;font-weight:500;}
+    :root {
+      /* Brand */
+      --navy:           #0A1628;
+      --navy-mid:       #0F2040;
+      --navy-light:     #162B52;
+      --blue:           #1565C0;
+      --blue-light:     #1976D2;
+      --blue-hover:     #1E88E5;
+      --accent:         #2196F3;
 
-/* ═══════════ APP LAYOUT ═══════════ */
-#app{display:none;height:100vh;flex-direction:row;}
+      /* Neutrals */
+      --white:          #FFFFFF;
+      --surface:        #F8FAFC;
+      --surface-2:      #F1F5F9;
+      --border:         #E2E8F0;
+      --border-dark:    #CBD5E1;
+      --text-primary:   #0F172A;
+      --text-secondary: #475569;
+      --text-muted:     #94A3B8;
 
-/* Sidebar */
-.sidebar{
-  width:240px;background:var(--navy);display:flex;flex-direction:column;
-  padding:0;flex-shrink:0;
-}
-.sidebar-brand{
-  padding:24px 24px 20px;border-bottom:1px solid rgba(255,255,255,.06);
-}
-.sidebar-brand-name{font-size:17px;font-weight:800;color:var(--white);letter-spacing:-.3px;}
-.sidebar-brand-sub{font-size:10px;color:var(--soft);margin-top:2px;font-weight:500;text-transform:uppercase;letter-spacing:.8px;}
-.sidebar-nav{flex:1;padding:16px 12px;}
-.nav-item{
-  display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r);
-  color:var(--soft);font-size:13px;font-weight:600;cursor:pointer;transition:.15s;
-  margin-bottom:2px;
-}
-.nav-item:hover{background:rgba(255,255,255,.06);color:var(--white);}
-.nav-item.active{background:var(--blue);color:var(--white);}
-.nav-icon{font-size:16px;width:20px;text-align:center;}
-.sidebar-bottom{padding:16px 12px 24px;border-top:1px solid rgba(255,255,255,.06);}
-.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 14px;}
-.sidebar-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--white);}
-.sidebar-username{font-size:12px;font-weight:600;color:var(--soft);}
-.btn-logout{
-  width:100%;padding:9px;background:rgba(255,255,255,.06);border:none;
-  color:var(--soft);border-radius:var(--r);font-size:12px;font-weight:600;
-  cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;margin-top:8px;
-}
-.btn-logout:hover{background:rgba(255,255,255,.12);color:var(--white);}
+      /* Semantic colours */
+      --green:          #16A34A;
+      --green-bg:       #DCFCE7;
+      --red:            #DC2626;
+      --red-bg:         #FEE2E2;
+      --amber:          #D97706;
+      --amber-bg:       #FEF3C7;
+      --purple:         #7C3AED;
+      --purple-bg:      #EDE9FE;
 
-/* Main */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{
-  background:var(--white);padding:0 32px;height:64px;display:flex;
-  align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.topbar-title{font-size:18px;font-weight:800;color:var(--dark);}
-.topbar-sub{font-size:12px;color:var(--mid);margin-top:1px;}
-.topbar-actions{display:flex;align-items:center;gap:12px;}
-.btn-primary{
-  background:var(--blue);color:var(--white);border:none;padding:10px 20px;
-  border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;
-  font-family:'Inter',sans-serif;transition:.2s;display:flex;align-items:center;gap:6px;
-}
-.btn-primary:hover{background:var(--blue2);box-shadow:0 4px 14px rgba(21,101,192,.35);}
+      /* Layout */
+      --sidebar-w:      260px;
+      --topbar-h:       64px;
+      --radius:         10px;
+      --radius-sm:      6px;
+      --shadow-sm:      0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:      0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg:      0 20px 60px rgba(0,0,0,.18);
 
-.page{flex:1;overflow-y:auto;padding:28px 32px;}
+      /* Transitions */
+      --t-fast:         .15s ease;
+      --t-base:         .25s ease;
+    }
 
-/* ═══════════ KPI CARDS ═══════════ */
-.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px;}
-.kpi{
-  background:var(--white);border-radius:var(--r2);padding:20px;
-  box-shadow:var(--shadow0);border:1px solid var(--border);transition:.2s;position:relative;overflow:hidden;
-}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);}
-.kpi:nth-child(2)::before{background:var(--green);}
-.kpi:nth-child(3)::before{background:var(--red);}
-.kpi:nth-child(4)::before{background:var(--purple);}
-.kpi:nth-child(5)::before{background:var(--blue3);}
-.kpi:nth-child(6)::before{background:var(--amber);}
-.kpi:hover{box-shadow:var(--shadow1);transform:translateY(-1px);}
-.kpi-lbl{font-size:10px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.kpi-val{font-size:24px;font-weight:800;color:var(--dark);line-height:1;}
-.kpi-val.pos{color:var(--green);}
-.kpi-val.neg{color:var(--red);}
-.kpi-val.blu{color:var(--blue);}
-.kpi-val.pur{color:var(--purple);}
-.kpi-val.amb{color:var(--amber);}
+    html { font-size: 14px; scroll-behavior: smooth; }
 
-/* ═══════════ TABLE SECTION ═══════════ */
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.section-title{font-size:16px;font-weight:800;color:var(--dark);}
-.section-right{display:flex;gap:10px;align-items:center;}
-.search{
-  padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:var(--r);
-  font-size:13px;font-family:'Inter',sans-serif;outline:none;width:220px;
-  background:var(--white);transition:.2s;color:var(--dark);
-}
-.search:focus{border-color:var(--blue);}
-.search-wrap{position:relative;}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--soft);font-size:14px;pointer-events:none;}
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--surface);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-.card{background:var(--white);border-radius:var(--r2);box-shadow:var(--shadow0);border:1px solid var(--border);overflow:hidden;}
-.tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead tr{background:var(--navy);}
-thead th{padding:12px 14px;text-align:left;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
-tbody tr{border-bottom:1px solid var(--light);transition:.1s;}
-tbody tr:last-child{border-bottom:none;}
-tbody tr:hover{background:var(--pale);}
-td{padding:12px 14px;white-space:nowrap;color:var(--dark);}
-td.num{color:var(--mid);font-size:12px;}
-td.money{font-weight:700;font-variant-numeric:tabular-nums;}
-td.green{color:var(--green);font-weight:700;}
-td.red{color:var(--red);font-weight:700;}
+    /* ----------------------------------------------------------------
+       SCROLLBAR STYLING
+    ---------------------------------------------------------------- */
+    ::-webkit-scrollbar              { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track        { background: transparent; }
+    ::-webkit-scrollbar-thumb        { background: var(--border-dark); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover  { background: var(--text-muted); }
 
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.2px;}
-.b-profit{background:var(--greenbg);color:var(--green);border:1px solid var(--greenborder);}
-.b-loss{background:var(--redbg);color:var(--red);border:1px solid var(--redborder);}
-.b-listed{background:var(--light);color:var(--blue);border:1px solid var(--border);}
-.b-pending{background:var(--amberbg);color:var(--amber);border:1px solid var(--amberborder);}
-.b-transfer{background:var(--purplebg);color:var(--purple);border:1px solid #C9B8F8;}
-.b-ano{background:var(--greenbg);color:var(--green);border:1px solid var(--greenborder);}
-.b-nie{background:var(--redbg);color:var(--red);border:1px solid var(--redborder);}
+    /* ----------------------------------------------------------------
+       UTILITY CLASSES
+    ---------------------------------------------------------------- */
+    .hidden   { display: none !important; }
+    .text-muted   { color: var(--text-muted); }
+    .text-green   { color: var(--green); }
+    .text-red     { color: var(--red); }
+    .text-sm      { font-size: .78rem; }
+    .font-mono    { font-family: 'SF Mono','Cascadia Code',monospace; }
+    .bold         { font-weight: 600; }
+    .truncate     { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.btn-edit{background:none;border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:12px;color:var(--mid);transition:.15s;font-family:'Inter',sans-serif;font-weight:600;}
-.btn-edit:hover{border-color:var(--blue);color:var(--blue);background:var(--light);}
+    /* ================================================================
+       ANIMATIONS
+    ================================================================ */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
 
-/* ═══════════ MODAL ═══════════ */
-.overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-.overlay.open{display:flex;}
-.modal{background:var(--white);border-radius:var(--r3);width:700px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(10,22,40,.3);}
-.modal-hdr{padding:24px 28px 20px;border-bottom:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1;border-radius:var(--r3) var(--r3) 0 0;}
-.modal-title{font-size:18px;font-weight:800;color:var(--dark);}
-.modal-close{background:var(--pale);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.15s;color:var(--mid);}
-.modal-close:hover{background:var(--light);color:var(--dark);}
-.modal-body{padding:24px 28px;}
-.modal-footer{padding:16px 28px 24px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--light);}
+    /* ================================================================
+       LOGIN PAGE — Split screen
+    ================================================================ */
+    #loginPage {
+      position: fixed; inset: 0;
+      display: flex;
+      z-index: 9999;
+      animation: fadeIn .4s ease;
+    }
 
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.fg{display:flex;flex-direction:column;gap:5px;}
-.fg.full{grid-column:1/-1;}
-.fg-section{grid-column:1/-1;font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;padding-bottom:8px;border-bottom:2px solid var(--light);margin-top:8px;}
-label{font-size:11px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.7px;}
-.fi{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:.2s;background:var(--pale);color:var(--dark);}
-.fi:focus{border-color:var(--blue);background:var(--white);}
+    /* LEFT PANEL */
+    .login-left {
+      width: 46%;
+      background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 55%, #0D2D6B 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 52px 60px;
+      position: relative;
+      overflow: hidden;
+    }
 
-.btn-sec{background:var(--white);color:var(--mid);border:1.5px solid var(--border);padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;}
-.btn-sec:hover{border-color:var(--blue);color:var(--blue);}
-.btn-del{background:var(--redbg);color:var(--red);border:1.5px solid var(--redborder);padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;}
-.btn-del:hover{background:var(--red);color:var(--white);}
+    /* Decorative glow blobs */
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(33,150,243,.13) 0%, transparent 70%);
+      top: -140px; right: -140px;
+      pointer-events: none;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 340px; height: 340px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(21,101,192,.16) 0%, transparent 70%);
+      bottom: -90px; left: -90px;
+      pointer-events: none;
+    }
 
-/* Toast */
-.toast{position:fixed;bottom:28px;right:28px;padding:14px 22px;border-radius:var(--r2);font-size:13px;font-weight:600;box-shadow:var(--shadow2);z-index:999;transform:translateY(80px);transition:.3s;opacity:0;pointer-events:none;display:flex;align-items:center;gap:8px;}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.ok{background:var(--navy);color:var(--white);}
-.toast.ok .ti{color:#4ADE80;}
-.toast.err{background:var(--red);color:var(--white);}
+    .login-brand {
+      display: flex; align-items: center; gap: 14px;
+      position: relative; z-index: 1;
+    }
+    .login-brand-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .login-brand-icon svg { fill: white; }
+    .login-brand-name {
+      font-size: 1.3rem; font-weight: 700; color: white; letter-spacing: -.4px;
+    }
+    .login-brand-tag {
+      font-size: .68rem; font-weight: 500;
+      color: rgba(255,255,255,.45);
+      text-transform: uppercase; letter-spacing: .07em;
+      margin-top: 2px;
+    }
 
-/* Loading */
-.spin{width:28px;height:28px;border:3px solid var(--light);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loading-cell{text-align:center;padding:48px;color:var(--mid);font-size:13px;}
+    .login-hero {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 48px 0 32px;
+      position: relative; z-index: 1;
+    }
+    .login-hero h1 {
+      font-size: 2.5rem; font-weight: 800;
+      color: white; line-height: 1.15; letter-spacing: -.6px;
+      margin-bottom: 18px;
+    }
+    .login-hero h1 span {
+      background: linear-gradient(90deg, #64B5F6 0%, #90CAF9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .login-hero p {
+      font-size: .93rem; color: rgba(255,255,255,.5);
+      line-height: 1.7; max-width: 340px;
+    }
 
-@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr);}.sidebar{display:none;}.page{padding:16px;}}
-</style>
+    /* Preview stats on login */
+    .login-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 14px; margin-top: 36px;
+      position: relative; z-index: 1;
+    }
+    .login-stat {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      backdrop-filter: blur(8px);
+    }
+    .login-stat-val {
+      font-size: 1.4rem; font-weight: 700;
+      color: white; letter-spacing: -.4px;
+    }
+    .login-stat-label {
+      font-size: .7rem; font-weight: 500;
+      color: rgba(255,255,255,.42);
+      text-transform: uppercase; letter-spacing: .07em;
+      margin-top: 4px;
+    }
+
+    .login-footer-text {
+      font-size: .7rem; color: rgba(255,255,255,.28);
+      position: relative; z-index: 1;
+    }
+
+    /* RIGHT PANEL */
+    .login-right {
+      flex: 1; background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 80px;
+    }
+    .login-form-wrap { width: 100%; max-width: 380px; }
+    .login-form-wrap h2 {
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -.5px;
+      margin-bottom: 6px;
+    }
+    .login-form-wrap > p {
+      font-size: .88rem; color: var(--text-secondary);
+      margin-bottom: 34px;
+    }
+
+    .login-error {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: var(--red-bg);
+      color: var(--red);
+      font-size: .82rem; font-weight: 500;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(220,38,38,.2);
+      display: none;
+    }
+
+    /* ================================================================
+       FORM ELEMENTS (shared across login + modal)
+    ================================================================ */
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: .73rem; font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: .065em;
+      margin-bottom: 7px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      font-family: inherit; font-size: .88rem; font-weight: 400;
+      color: var(--text-primary);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--t-fast), box-shadow var(--t-fast);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21,101,192,.11);
+    }
+    .form-group textarea { resize: vertical; min-height: 72px; }
+
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .form-section-label {
+      font-size: .67rem; font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .1em;
+      margin: 20px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-section-label:first-child { margin-top: 0; }
+
+    /* ================================================================
+       BUTTONS
+    ================================================================ */
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 11px 22px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+      color: white;
+      font-family: inherit; font-size: .88rem; font-weight: 600;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer; letter-spacing: -.1px;
+      transition: opacity var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+      width: 100%;
+    }
+    .btn-primary:hover   { opacity: .92; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(21,101,192,.32); }
+    .btn-primary:active  { transform: translateY(0); opacity: 1; }
+    .btn-primary:disabled{ opacity: .58; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-add {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+      color: white;
+      font-family: inherit; font-size: .82rem; font-weight: 600;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer; letter-spacing: -.1px;
+      transition: opacity var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+    }
+    .btn-add:hover { opacity: .91; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(21,101,192,.32); }
+    .btn-add svg   { width: 15px; height: 15px; }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px;
+      background: var(--white); color: var(--text-secondary);
+      font-family: inherit; font-size: .83rem; font-weight: 600;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+    }
+    .btn-secondary:hover { background: var(--surface-2); border-color: var(--border-dark); color: var(--text-primary); }
+
+    .btn-danger {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px;
+      background: var(--white); color: var(--red);
+      font-family: inherit; font-size: .83rem; font-weight: 600;
+      border: 1.5px solid #FECACA; border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--t-fast), border-color var(--t-fast);
+    }
+    .btn-danger:hover { background: var(--red-bg); border-color: var(--red); }
+
+    .btn-refresh {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 14px;
+      background: var(--white); color: var(--text-secondary);
+      font-family: inherit; font-size: .82rem; font-weight: 500;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+    }
+    .btn-refresh:hover { background: var(--surface-2); border-color: var(--border-dark); color: var(--text-primary); }
+    .btn-refresh svg   { width: 14px; height: 14px; }
+
+    .btn-icon {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface-2); color: var(--text-secondary);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+      flex-shrink: 0;
+    }
+    .btn-icon:hover { background: var(--border); border-color: var(--border-dark); color: var(--text-primary); }
+    .btn-icon svg   { width: 14px; height: 14px; }
+
+    /* ================================================================
+       SPINNER
+    ================================================================ */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* ================================================================
+       APP SHELL (sidebar + main)
+    ================================================================ */
+    #appShell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ----------------------------------------------------------------
+       SIDEBAR
+    ---------------------------------------------------------------- */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--navy);
+      display: flex; flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Bottom-fade on sidebar */
+    .sidebar::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 65%, rgba(0,0,0,.22) 100%);
+      pointer-events: none;
+    }
+
+    .sidebar-logo {
+      padding: 22px 20px 18px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      flex-shrink: 0;
+    }
+    .sidebar-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-icon svg { fill: white; }
+    .sidebar-logo-name {
+      font-size: .92rem; font-weight: 700;
+      color: white; letter-spacing: -.3px; line-height: 1.1;
+    }
+    .sidebar-logo-sub {
+      font-size: .64rem; font-weight: 500;
+      color: rgba(255,255,255,.38);
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      flex: 1; padding: 14px 10px;
+      overflow-y: auto;
+      position: relative; z-index: 1;
+    }
+    .nav-section-label {
+      font-size: .63rem; font-weight: 600;
+      color: rgba(255,255,255,.28);
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: 0 10px; margin-bottom: 5px; margin-top: 18px;
+    }
+    .nav-section-label:first-child { margin-top: 2px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: rgba(255,255,255,.52);
+      font-size: .84rem; font-weight: 500;
+      margin-bottom: 2px;
+      transition: background var(--t-fast), color var(--t-fast);
+      position: relative; user-select: none;
+    }
+    .nav-item:hover {
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.88);
+    }
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(33,150,243,.22) 0%, rgba(33,150,243,.07) 100%);
+      color: white;
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute; left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 58%;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+    .nav-item svg {
+      width: 16px; height: 16px; flex-shrink: 0;
+      opacity: .65; transition: opacity var(--t-fast);
+    }
+    .nav-item.active svg, .nav-item:hover svg { opacity: 1; }
+
+    .sidebar-footer {
+      padding: 14px 10px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 11px;
+    }
+    .user-avatar {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-hover) 100%);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .74rem; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .user-name  { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.82); }
+    .user-role  { font-size: .68rem; color: rgba(255,255,255,.35); }
+
+    .logout-btn {
+      display: flex; align-items: center; gap: 9px;
+      width: 100%; padding: 8px 11px;
+      background: transparent; color: rgba(255,255,255,.42);
+      font-family: inherit; font-size: .81rem; font-weight: 500;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer; text-align: left;
+      transition: background var(--t-fast), color var(--t-fast);
+    }
+    .logout-btn:hover { background: rgba(220,38,38,.14); color: #FCA5A5; }
+    .logout-btn svg { width: 15px; height: 15px; opacity: .65; }
+
+    /* ----------------------------------------------------------------
+       MAIN AREA
+    ---------------------------------------------------------------- */
+    .main-area {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-title {
+      font-size: 1.08rem; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -.4px;
+    }
+    .topbar-actions {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .topbar-date {
+      font-size: .77rem; font-weight: 500;
+      color: var(--text-muted);
+      padding-right: 14px;
+      border-right: 1px solid var(--border);
+      margin-right: 4px;
+    }
+
+    /* PAGE CONTENT */
+    .page-content {
+      flex: 1; overflow-y: auto; padding: 26px 30px;
+    }
+
+    /* VIEWS */
+    .view { display: none; animation: fadeSlideUp .28s ease; }
+    .view.active { display: block; }
+
+    /* ================================================================
+       KPI CARDS
+    ================================================================ */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-bottom: 26px;
+    }
+
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: box-shadow var(--t-base), transform var(--t-base);
+      position: relative; overflow: hidden;
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .kpi-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--accent) 100%);
+      opacity: 0; transition: opacity var(--t-base);
+    }
+    .kpi-card:hover::before { opacity: 1; }
+
+    .kpi-label {
+      font-size: .7rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .kpi-label svg { width: 13px; height: 13px; }
+
+    .kpi-value {
+      font-size: 1.8rem; font-weight: 800;
+      letter-spacing: -.8px; line-height: 1;
+      color: var(--text-primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .kpi-value.profit { color: var(--green); }
+    .kpi-value.loss   { color: var(--red); }
+    .kpi-value.blue   { color: var(--blue); }
+
+    .kpi-sub {
+      font-size: .73rem; color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ================================================================
+       SECTION HEADERS
+    ================================================================ */
+    .section-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: .88rem; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -.2px;
+    }
+    .section-subtitle {
+      font-size: .75rem; color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ================================================================
+       CARD + TABLE
+    ================================================================ */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .81rem; }
+
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: .67rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .07em;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t-fast);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #F1F5FD; }
+
+    tbody td {
+      padding: 10px 14px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      max-width: 160px;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+
+    td.num { font-variant-numeric: tabular-nums; font-weight: 500; }
+
+    .loading-row td {
+      text-align: center; padding: 44px 16px;
+      color: var(--text-muted);
+    }
+    .loading-row td span { margin-right: 8px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 56px 20px; color: var(--text-muted);
+    }
+    .empty-state svg {
+      width: 40px; height: 40px; display: block;
+      margin: 0 auto 12px; opacity: .3;
+    }
+    .empty-state p { font-size: .86rem; }
+
+    /* ================================================================
+       BADGES
+    ================================================================ */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: .69rem; font-weight: 600; letter-spacing: .02em;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    .badge-purple { background: var(--purple-bg); color: var(--purple); }
+    .badge-purple .badge-dot { background: var(--purple); }
+
+    .badge-blue   { background: #DBEAFE; color: var(--blue); }
+    .badge-blue   .badge-dot { background: var(--blue); }
+
+    .badge-amber  { background: var(--amber-bg); color: var(--amber); }
+    .badge-amber  .badge-dot { background: var(--amber); }
+
+    .badge-green  { background: var(--green-bg); color: var(--green); }
+    .badge-green  .badge-dot { background: var(--green); }
+
+    .badge-red    { background: var(--red-bg); color: var(--red); }
+    .badge-red    .badge-dot { background: var(--red); }
+
+    .badge-gray   { background: #F1F5F9; color: var(--text-secondary); }
+    .badge-gray   .badge-dot { background: var(--text-muted); }
+
+    /* ================================================================
+       TICKETS VIEW TOOLBAR
+    ================================================================ */
+    .tickets-toolbar {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .tickets-toolbar-right {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    /* Search bar */
+    .search-wrap { position: relative; max-width: 320px; flex: 1; }
+    .search-wrap svg {
+      position: absolute; left: 11px; top: 50%;
+      transform: translateY(-50%);
+      width: 15px; height: 15px;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      font-family: inherit; font-size: .83rem;
+      color: var(--text-primary);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--t-fast), box-shadow var(--t-fast);
+    }
+    .search-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21,101,192,.10);
+    }
+
+    /* ================================================================
+       MODAL
+    ================================================================ */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(10, 22, 40, .55);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      animation: fadeIn .2s ease;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: 14px;
+      width: 100%; max-width: 720px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: fadeSlideUp .22s ease;
+    }
+    .modal-header {
+      padding: 22px 26px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: var(--white); z-index: 2;
+      border-radius: 14px 14px 0 0;
+    }
+    .modal-title {
+      font-size: .98rem; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -.3px;
+    }
+    .modal-subtitle {
+      font-size: .75rem; color: var(--text-muted); margin-top: 2px;
+    }
+    .modal-close {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface); color: var(--text-secondary);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--t-fast), color var(--t-fast);
+    }
+    .modal-close:hover { background: var(--border); color: var(--text-primary); }
+    .modal-close svg { width: 15px; height: 15px; }
+
+    .modal-body { padding: 22px 26px; }
+
+    .modal-footer {
+      padding: 14px 26px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border);
+      gap: 10px;
+    }
+    .modal-footer-right { display: flex; align-items: center; gap: 8px; }
+
+    /* Computed profit/roi display inside modal */
+    .computed-fields {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .computed-item label {
+      display: block;
+      font-size: .67rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-bottom: 5px;
+    }
+    .computed-value {
+      font-size: 1.1rem; font-weight: 700; letter-spacing: -.3px;
+      color: var(--text-primary);
+    }
+    .computed-value.pos { color: var(--green); }
+    .computed-value.neg { color: var(--red); }
+
+    /* ================================================================
+       TOAST NOTIFICATIONS
+    ================================================================ */
+    #toastContainer {
+      position: fixed; bottom: 24px; right: 24px;
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      min-width: 270px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: .82rem; font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 10px;
+      animation: slideInRight .28s ease;
+      pointer-events: all;
+      color: white;
+    }
+    .toast svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .toast-success { background: #166534; }
+    .toast-error   { background: #991B1B; }
+    .toast-info    { background: var(--navy-mid); }
+
+    /* ================================================================
+       RESPONSIVE FALLBACKS
+    ================================================================ */
+    @media (max-width: 1100px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .login-left { display: none; }
+      .login-right { padding: 36px 24px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .page-content { padding: 18px 16px; }
+      .topbar { padding: 0 16px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ═══ LOGIN ═══ -->
-<div id="loginWrap">
+<!-- ================================================================
+     LOGIN PAGE
+================================================================ -->
+<div id="loginPage">
+
+  <!-- Left: branding / hero -->
   <div class="login-left">
-    <div class="login-deco"></div>
     <div class="login-brand">
-      <div class="login-brand-icon">🎫</div>
-      <div class="login-brand-name">TicketDesk</div>
-      <div class="login-brand-sub">Resale Portfolio Management</div>
-    </div>
-    <div class="login-stats">
-      <div>
-        <div class="login-stat-val">€9.6K</div>
-        <div class="login-stat-lbl">Invested</div>
+      <div class="login-brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7H5v2h2V7z"/>
+        </svg>
       </div>
       <div>
-        <div class="login-stat-val">175%</div>
-        <div class="login-stat-lbl">Avg ROI</div>
-      </div>
-      <div>
-        <div class="login-stat-val">7+</div>
-        <div class="login-stat-lbl">Artists</div>
+        <div class="login-brand-name">TicketDesk</div>
+        <div class="login-brand-tag">Portfolio Management</div>
       </div>
     </div>
+
+    <div class="login-hero">
+      <h1>Track every<br/><span>ticket, every gain.</span></h1>
+      <p>Professional-grade resale portfolio management. Monitor your investments, track ROI, and manage all your listings in one place.</p>
+      <div class="login-stats">
+        <div class="login-stat">
+          <div class="login-stat-val" id="loginStatInvested">—</div>
+          <div class="login-stat-label">Invested</div>
+        </div>
+        <div class="login-stat">
+          <div class="login-stat-val" id="loginStatProfit">—</div>
+          <div class="login-stat-label">Net Profit</div>
+        </div>
+        <div class="login-stat">
+          <div class="login-stat-val" id="loginStatTickets">—</div>
+          <div class="login-stat-label">Sold</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-footer-text">© 2025 TicketDesk — All rights reserved.</div>
   </div>
+
+  <!-- Right: login form -->
   <div class="login-right">
     <div class="login-form-wrap">
-      <div class="login-hello">Vitaj späť 👋</div>
-      <div class="login-hint">Zadaj heslo pre prístup do systému</div>
-      <label class="login-label">Heslo</label>
-      <input class="login-input" type="password" id="pwdInput" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')login()">
-      <button class="login-btn" onclick="login()">Prihlásiť sa →</button>
-      <div class="login-err" id="loginErr">⚠️ Nesprávne heslo</div>
+      <h2>Welcome back</h2>
+      <p>Enter your credentials to access the portfolio dashboard.</p>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button class="btn-primary" id="loginBtn" onclick="handleLogin()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+          <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4m-5-4l5-5-5-5m5 5H3"/>
+        </svg>
+        Sign In to Portfolio
+      </button>
+
+      <div class="login-error" id="loginError">
+        Incorrect password. Please try again.
+      </div>
     </div>
   </div>
-</div>
+</div><!-- /#loginPage -->
 
-<!-- ═══ APP ═══ -->
-<div id="app">
-  <div class="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-name">🎫 TicketDesk</div>
-      <div class="sidebar-brand-sub">Portfolio Manager</div>
+
+<!-- ================================================================
+     MAIN APPLICATION SHELL
+================================================================ -->
+<div id="appShell" class="hidden">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="white">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7H5v2h2V7z"/>
+        </svg>
+      </div>
+      <div class="sidebar-logo-text">
+        <div class="sidebar-logo-name">TicketDesk</div>
+        <div class="sidebar-logo-sub">Portfolio v2.0</div>
+      </div>
     </div>
-    <div class="sidebar-nav">
-      <div class="nav-item active"><span class="nav-icon">📊</span> Dashboard</div>
-      <div class="nav-item" onclick="openAdd()"><span class="nav-icon">➕</span> Nový lístok</div>
-    </div>
-    <div class="sidebar-bottom">
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+
+      <div class="nav-item active" id="navDashboard" onclick="showView('dashboard')">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Dashboard
+      </div>
+
+      <div class="nav-item" id="navTickets" onclick="showView('tickets')">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+        </svg>
+        Tickets
+      </div>
+
+      <div class="nav-section-label">Quick Action</div>
+
+      <div class="nav-item" onclick="openAddModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Add New Ticket
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="sidebar-avatar">T</div>
-        <div class="sidebar-username">Ticket Admin</div>
+        <div class="user-avatar">AD</div>
+        <div>
+          <div class="user-name">Admin</div>
+          <div class="user-role">Portfolio Manager</div>
+        </div>
       </div>
-      <button class="btn-logout" onclick="logout()">← Odhlásiť sa</button>
+      <button class="logout-btn" onclick="handleLogout()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        Sign Out
+      </button>
     </div>
-  </div>
+  </aside>
 
-  <div class="main">
-    <div class="topbar">
-      <div>
-        <div class="topbar-title">Portfolio Overview</div>
-        <div class="topbar-sub">Viagogo · VividSeats · Lysted · Ticketmaster · Eventim · AXS</div>
-      </div>
+  <!-- ---- MAIN CONTENT AREA ---- -->
+  <div class="main-area">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
       <div class="topbar-actions">
-        <button class="btn-primary" onclick="loadAll()">↻ Refresh</button>
-        <button class="btn-primary" onclick="openAdd()">+ Pridať lístok</button>
+        <span class="topbar-date" id="topbarDate"></span>
+        <button class="btn-refresh" onclick="refreshCurrentView()">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          Refresh
+        </button>
+        <button class="btn-add" onclick="openAddModal()">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Add Ticket
+        </button>
       </div>
-    </div>
+    </header>
 
-    <div class="page">
-      <!-- KPI -->
-      <div class="kpi-row" id="kpiRow">
-        <div class="kpi"><div class="kpi-lbl">Načítavam...</div><div class="kpi-val">—</div></div>
-        <div class="kpi"><div class="kpi-lbl">—</div><div class="kpi-val">—</div></div>
-        <div class="kpi"><div class="kpi-lbl">—</div><div class="kpi-val">—</div></div>
-        <div class="kpi"><div class="kpi-lbl">—</div><div class="kpi-val">—</div></div>
-        <div class="kpi"><div class="kpi-lbl">—</div><div class="kpi-val">—</div></div>
-        <div class="kpi"><div class="kpi-lbl">—</div><div class="kpi-val">—</div></div>
-      </div>
+    <!-- Page content -->
+    <div class="page-content">
 
-      <!-- Tickets -->
-      <div class="section-hdr">
-        <div class="section-title">Všetky lístky</div>
-        <div class="section-right">
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input class="search" type="text" placeholder="Hľadaj..." oninput="filterTable(this.value)">
+      <!-- ============================================================
+           DASHBOARD VIEW
+      ============================================================ -->
+      <div class="view active" id="viewDashboard">
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+              </svg>
+              Total Invested
+            </div>
+            <div class="kpi-value blue" id="kpiInvested">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">Capital deployed</div>
           </div>
-          <button class="btn-primary" onclick="openAdd()">+ Pridať</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="tbl-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th><th>Umelec</th><th>Krajina</th><th>Dátum</th>
-                <th>Sekcia</th><th>Ks</th><th>Kúpené</th>
-                <th>Kúpná €</th><th>Predaj €</th><th>Zisk €</th><th>ROI</th>
-                <th>Status</th><th>Vyplatené</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="tBody">
-              <tr><td colspan="14" class="loading-cell"><div class="spin"></div>Načítavam dáta...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══ MODAL ═══ -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="mTitle">Nový lístok</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/>
+              </svg>
+              Total Revenue
+            </div>
+            <div class="kpi-value blue" id="kpiRevenue">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">Gross sales</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+              </svg>
+              Net Profit
+            </div>
+            <div class="kpi-value" id="kpiProfit">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">After all costs</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.5 18.5l6-6 4 4 7-9L22 9l-8.5 11-4-4-6 6z"/>
+              </svg>
+              Avg ROI
+            </div>
+            <div class="kpi-value" id="kpiRoi">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">Return on investment</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 2.54 16.5 1 14.66 1c-1.05 0-1.96.54-2.48 1.36L12 3.4l-.18-.04C11.3 1.54 10.39 1 9.34 1 7.5 1 6 2.54 6 4.66c0 .46.11.9.18 1.34H4c-1.11 0-2 .89-2 2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+              </svg>
+              Tickets Sold
+            </div>
+            <div class="kpi-value blue" id="kpiSold">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">Completed transactions</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+              </svg>
+              Active Events
+            </div>
+            <div class="kpi-value blue" id="kpiActive">
+              <span class="spinner"></span>
+            </div>
+            <div class="kpi-sub">Upcoming shows</div>
+          </div>
+
+        </div><!-- /.kpi-grid -->
+
+        <!-- Portfolio Breakdown -->
+        <div class="section-header">
+          <div>
+            <div class="section-title">Portfolio Breakdown</div>
+            <div class="section-subtitle">Performance grouped by artist / event</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Artist / Event</th>
+                  <th>Country</th>
+                  <th>Tickets</th>
+                  <th>Invested</th>
+                  <th>Revenue</th>
+                  <th>Profit</th>
+                  <th>ROI</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardTableBody">
+                <tr class="loading-row">
+                  <td colspan="9">
+                    <span class="spinner"></span>Loading portfolio data…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /#viewDashboard -->
+
+
+      <!-- ============================================================
+           TICKETS VIEW
+      ============================================================ -->
+      <div class="view" id="viewTickets">
+
+        <div class="tickets-toolbar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              id="ticketSearch"
+              placeholder="Search artist, country, status…"
+              oninput="filterTickets()"
+            />
+          </div>
+          <div class="tickets-toolbar-right">
+            <span class="text-sm text-muted" id="ticketCount">Loading…</span>
+            <button class="btn-add" onclick="openAddModal()">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              Add Ticket
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Artist</th>
+                  <th>Country</th>
+                  <th>Event Date</th>
+                  <th>Section / Row / Seats</th>
+                  <th>Qty</th>
+                  <th>Bought At</th>
+                  <th>Account</th>
+                  <th>Buy €</th>
+                  <th>Sell €</th>
+                  <th>Profit €</th>
+                  <th>ROI %</th>
+                  <th>Sold At</th>
+                  <th>Status</th>
+                  <th>Listed</th>
+                  <th>Paid</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsTableBody">
+                <tr class="loading-row">
+                  <td colspan="17">
+                    <span class="spinner"></span>Loading tickets…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /#viewTickets -->
+
+    </div><!-- /.page-content -->
+  </div><!-- /.main-area -->
+</div><!-- /#appShell -->
+
+
+<!-- ================================================================
+     ADD / EDIT TICKET MODAL
+================================================================ -->
+<div class="modal-backdrop hidden" id="ticketModal" onclick="handleModalBgClick(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+
+    <div class="modal-header">
+      <div>
+        <div class="modal-title"  id="modalTitle">Add New Ticket</div>
+        <div class="modal-subtitle" id="modalSubtitle">Complete all relevant fields below</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
     </div>
+
     <div class="modal-body">
-      <div class="form-grid">
-        <div class="fg-section">Základné info</div>
-        <div class="fg"><label>Umelec *</label><input class="fi" id="f_artist" placeholder="napr. BST"></div>
-        <div class="fg"><label>Krajina</label><input class="fi" id="f_country" placeholder="napr. UK, DE, SK"></div>
-        <div class="fg"><label>Dátum eventu</label><input class="fi" id="f_date" placeholder="napr. 11 Jul 2026"></div>
-        <div class="fg"><label>Sekcia / Rad / Miesta</label><input class="fi" id="f_section" placeholder="napr. Sec 323, Row 70, Seats 1-3"></div>
-        <div class="fg"><label>Počet ks</label><input class="fi" id="f_qty" type="number" value="1" min="1"></div>
-        <div class="fg"><label>Kde kúpené</label><input class="fi" id="f_boughtAt" placeholder="Viagogo, Ticketmaster..."></div>
-        <div class="fg"><label>Účet / Email</label><input class="fi" id="f_account" placeholder="email@example.com"></div>
-        <div class="fg"><label>Kúpná cena (€) *</label><input class="fi" id="f_buyPrice" type="number" step="0.01" placeholder="0.00"></div>
+      <!-- Internal row index for edit operations -->
+      <input type="hidden" id="fRowIndex" />
 
-        <div class="fg-section">Predaj</div>
-        <div class="fg"><label>Predajná cena (€)</label><input class="fi" id="f_sellPrice" type="number" step="0.01" placeholder="0.00"></div>
-        <div class="fg"><label>Kde predané</label><input class="fi" id="f_soldAt" placeholder="Viagogo, StubHub..."></div>
-        <div class="fg"><label>Status</label>
-          <select class="fi" id="f_status">
-            <option value="">— vyber —</option>
-            <option>Listed</option><option>Pending</option>
-            <option>Transferred</option><option>Transferred (ACCEPTED)</option>
+      <!-- EVENT INFO -->
+      <div class="form-section-label">Event Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Artist / Event <em style="opacity:.6;font-style:normal;">(UMELEC)</em></label>
+          <input type="text" id="fArtist" placeholder="e.g. Bad Bunny" />
+        </div>
+        <div class="form-group">
+          <label>Country <em style="opacity:.6;font-style:normal;">(KRAJINA)</em></label>
+          <input type="text" id="fCountry" placeholder="e.g. SK, CZ, HU, DE" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Event Date <em style="opacity:.6;font-style:normal;">(DATUM EVENTU)</em></label>
+          <input type="date" id="fEventDate" />
+        </div>
+        <div class="form-group">
+          <label>Section / Row / Seats <em style="opacity:.6;font-style:normal;">(SEKCIA/RAD/MIESTA)</em></label>
+          <input type="text" id="fSection" placeholder="e.g. GA / Row 5 / 12,13" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Quantity <em style="opacity:.6;font-style:normal;">(KS)</em></label>
+          <input type="number" id="fQty" min="1" placeholder="1" oninput="computeFields()" />
+        </div>
+        <div class="form-group">
+          <label>Where Bought <em style="opacity:.6;font-style:normal;">(KDE KUPENE)</em></label>
+          <input type="text" id="fBoughtAt" placeholder="e.g. Ticketmaster, Viagogo" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Account / Email <em style="opacity:.6;font-style:normal;">(UCET/EMAIL)</em></label>
+        <input type="text" id="fAccount" placeholder="e.g. user@email.com" />
+      </div>
+
+      <!-- PRICING -->
+      <div class="form-section-label">Pricing</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Buy Price € <em style="opacity:.6;font-style:normal;">(NAKUP)</em></label>
+          <input type="number" id="fBuyPrice" step="0.01" placeholder="0.00" oninput="computeFields()" />
+        </div>
+        <div class="form-group">
+          <label>Sell Price € <em style="opacity:.6;font-style:normal;">(PREDAJ)</em></label>
+          <input type="number" id="fSellPrice" step="0.01" placeholder="0.00" oninput="computeFields()" />
+        </div>
+      </div>
+
+      <!-- Auto-computed Profit & ROI -->
+      <div class="computed-fields">
+        <div class="computed-item">
+          <label>Computed Profit (ZISK)</label>
+          <div class="computed-value" id="computedProfit">—</div>
+        </div>
+        <div class="computed-item">
+          <label>Computed ROI</label>
+          <div class="computed-value" id="computedRoi">—</div>
+        </div>
+      </div>
+
+      <!-- SALE & LISTING -->
+      <div class="form-section-label">Sale &amp; Listing</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sold At / Platform <em style="opacity:.6;font-style:normal;">(KDE PREDANE)</em></label>
+          <input type="text" id="fSoldAt" placeholder="e.g. StubHub, Viagogo" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="fStatus">
+            <option value="">— Select Status —</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="Listed">Listed</option>
+            <option value="Pending">Pending</option>
+            <option value="Transferred">Transferred</option>
+            <option value="Transferred (ACCEPTED)">Transferred (ACCEPTED)</option>
+            <option value="PROFIT">PROFIT</option>
+            <option value="LOSS">LOSS</option>
           </select>
         </div>
-        <div class="fg"><label>Vyplatené peniaze</label>
-          <select class="fi" id="f_paid">
-            <option value="">— vyber —</option>
-            <option>ANO</option><option>NIE</option>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Listed <em style="opacity:.6;font-style:normal;">(ZALISTOVANE)</em></label>
+          <input type="text" id="fListed" placeholder="e.g. Yes / StubHub" />
+        </div>
+        <div class="form-group">
+          <label>Payment Received <em style="opacity:.6;font-style:normal;">(VYPLATENE PENIAZE)</em></label>
+          <select id="fPaid">
+            <option value="NIE">NIE — No</option>
+            <option value="ANO">ANO — Yes</option>
           </select>
         </div>
-        <div class="fg"><label>Zalistované</label><input class="fi" id="f_listed" placeholder="napr. ANO VI/VG"></div>
-        <div class="fg full"><label>Poznámky</label><input class="fi" id="f_notes" placeholder="Voliteľné..."></div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="form-section-label">Notes</div>
+      <div class="form-group">
+        <label>Notes <em style="opacity:.6;font-style:normal;">(POZNAMKY)</em></label>
+        <textarea id="fNotes" placeholder="Any additional notes or remarks…"></textarea>
+      </div>
+    </div><!-- /.modal-body -->
+
+    <div class="modal-footer">
+      <!-- Delete (edit mode only) -->
+      <div>
+        <button class="btn-danger hidden" id="btnDelete" onclick="deleteTicket()">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+          Delete Ticket
+        </button>
+      </div>
+      <div class="modal-footer-right">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" id="btnSave" onclick="saveTicket()" style="width:auto;min-width:140px;">
+          <svg viewBox="0 0 24 24" fill="white" width="14" height="14">
+            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+          </svg>
+          Save Ticket
+        </button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-del" id="btnDel" style="display:none" onclick="deleteTicket()">🗑 Vymazať</button>
-      <button class="btn-sec" onclick="closeModal()">Zrušiť</button>
-      <button class="btn-primary" onclick="saveTicket()">💾 Uložiť</button>
-    </div>
-  </div>
-</div>
 
-<div class="toast" id="toast"><span class="ti" id="toastIcon"></span><span id="toastMsg"></span></div>
+  </div><!-- /.modal -->
+</div><!-- /#ticketModal -->
 
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+
+<!-- ================================================================
+     APPLICATION JAVASCRIPT
+================================================================ -->
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbyIfqKHQDtrP3J7TcsmblQia1VrC5ROOYEgxo9PCKD-YJG6mQGmw-uDzsbYVraKWudG/exec';
-const PWD_KEY = 'td_auth';
-let tickets = [], editRow = null;
+'use strict';
 
-// ── AUTH (client-side check, heslo zo sessionStorage) ──
-function login() {
-  const pwd = document.getElementById('pwdInput').value.trim();
-  if (!pwd) return;
-  // Overenie cez API
-  apiCall({ action:'login', password:pwd }).then(r => {
-    if (r && r.ok) {
-      sessionStorage.setItem(PWD_KEY, '1');
-      showApp();
-    } else {
-      document.getElementById('loginErr').style.display = 'block';
-      document.getElementById('pwdInput').style.borderColor = 'var(--red)';
+/* ----------------------------------------------------------------
+   CONSTANTS
+---------------------------------------------------------------- */
+const PASSWORD = 'JovByHuv1111';
+const API_URL  = 'https://script.google.com/macros/s/AKfycbyIfqKHQDtrP3J7TcsmblQia1VrC5ROOYEgxo9PCKD-YJG6mQGmw-uDzsbYVraKWudG/exec';
+
+/* ----------------------------------------------------------------
+   APP STATE
+---------------------------------------------------------------- */
+const state = {
+  authenticated:    false,
+  currentView:      'dashboard',
+  tickets:          [],          // full list from API
+  filteredTickets:  [],          // after search filter
+  dashboardData:    null,
+  loadingDashboard: false,
+  loadingTickets:   false,
+};
+
+/* ----------------------------------------------------------------
+   DOM HELPERS
+---------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+
+/* ----------------------------------------------------------------
+   FORMATTING HELPERS
+---------------------------------------------------------------- */
+
+/** Format a numeric value as Euro currency. */
+function fmtEur(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  const abs  = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  return sign + '€' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/** Format a percentage with sign. */
+function fmtPct(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+}
+
+/** Format an integer with thousands separator. */
+function fmtInt(v) {
+  const n = parseInt(v, 10);
+  if (isNaN(n)) return '—';
+  return n.toLocaleString('en-US');
+}
+
+/** Escape HTML entities to prevent XSS. */
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/** Return badge CSS class for a STATUS value. */
+function statusClass(s) {
+  if (!s) return 'badge-gray';
+  const u = s.trim().toUpperCase();
+  if (u.includes('TRANSFERRED')) return 'badge-purple';
+  if (u === 'LISTED')             return 'badge-blue';
+  if (u === 'ACTIVE')             return 'badge-blue';
+  if (u === 'PENDING')            return 'badge-amber';
+  if (u === 'PROFIT')             return 'badge-green';
+  if (u === 'LOSS')               return 'badge-red';
+  return 'badge-gray';
+}
+
+/** Return badge CSS class for VYPLATENE (paid) field. */
+function paidClass(v) {
+  if (!v) return 'badge-gray';
+  return v.trim().toUpperCase() === 'ANO' ? 'badge-green' : 'badge-red';
+}
+
+/** Build HTML for a status badge. */
+function badge(text, cls) {
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${esc(text || '—')}</span>`;
+}
+
+/* ----------------------------------------------------------------
+   API — GET REQUEST WITH URLSearchParams
+---------------------------------------------------------------- */
+
+/**
+ * Call the Apps Script web app with GET parameters.
+ * Returns parsed JSON object, or null if the request fails.
+ * Falls back to no-cors for write operations where response body
+ * cannot be read (opaque response) — those will return null but
+ * the data will still reach the sheet.
+ */
+async function apiGet(params) {
+  const url = new URL(API_URL);
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && String(v).trim() !== '') {
+      url.searchParams.set(k, String(v));
     }
-  }).catch(() => {
-    // fallback: ak API nefunguje, nepustíme
-    document.getElementById('loginErr').style.display = 'block';
+  }
+
+  try {
+    const res = await fetch(url.toString(), {
+      method: 'GET',
+      mode:   'cors',
+    });
+
+    if (!res.ok) {
+      console.warn('[API] HTTP', res.status, url.toString());
+      return null;
+    }
+
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error('[API] Non-JSON:', text.slice(0, 300));
+      return null;
+    }
+  } catch (err) {
+    // CORS error on read — attempt no-cors fallback for write actions
+    console.warn('[API] CORS error, trying no-cors fallback:', err.message);
+    try {
+      await fetch(url.toString(), { method: 'GET', mode: 'no-cors' });
+    } catch { /* silent — opaque response is expected */ }
+    return null;
+  }
+}
+
+/* ----------------------------------------------------------------
+   TOAST NOTIFICATIONS
+---------------------------------------------------------------- */
+function toast(msg, type = 'info') {
+  const icons = {
+    success: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`,
+    error:   `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+    info:    `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`,
+  };
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.innerHTML = (icons[type] || icons.info) + esc(msg);
+  $('toastContainer').appendChild(t);
+
+  setTimeout(() => {
+    t.style.transition = 'opacity .3s ease, transform .3s ease';
+    t.style.opacity    = '0';
+    t.style.transform  = 'translateX(20px)';
+    setTimeout(() => t.remove(), 310);
+  }, 3600);
+}
+
+/* ----------------------------------------------------------------
+   INIT
+---------------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  // Topbar date
+  $('topbarDate').textContent = new Date().toLocaleDateString('en-GB', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+  });
+
+  // Allow Enter key on password field
+  $('loginPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  // Pre-fetch login panel stats (non-blocking, best-effort)
+  loadLoginStats();
+});
+
+/* ----------------------------------------------------------------
+   LOGIN PANEL STATS (decorative preview data)
+---------------------------------------------------------------- */
+async function loadLoginStats() {
+  const data = await apiGet({ action: 'getDashboard' });
+  if (!data) return;
+  if (data.totalInvested !== undefined) {
+    $('loginStatInvested').textContent = fmtEur(data.totalInvested);
+    $('loginStatProfit').textContent   = fmtEur(data.netProfit);
+    $('loginStatTickets').textContent  = fmtInt(data.ticketsSold);
+  }
+}
+
+/* ----------------------------------------------------------------
+   LOGIN / LOGOUT
+---------------------------------------------------------------- */
+function handleLogin() {
+  const pass = $('loginPassword').value.trim();
+  const btn  = $('loginBtn');
+  const err  = $('loginError');
+
+  btn.disabled       = true;
+  err.style.display  = 'none';
+
+  // Tiny artificial delay for perceived security
+  setTimeout(() => {
+    if (pass === PASSWORD) {
+      state.authenticated = true;
+      // Fade out login page
+      const lp = $('loginPage');
+      lp.style.transition = 'opacity .32s ease';
+      lp.style.opacity    = '0';
+      setTimeout(() => {
+        lp.classList.add('hidden');
+        $('appShell').classList.remove('hidden');
+        loadDashboard();   // kick off first data load
+      }, 340);
+    } else {
+      err.style.display = 'block';
+      $('loginPassword').value = '';
+      $('loginPassword').focus();
+      btn.disabled = false;
+    }
+  }, 200);
+}
+
+function handleLogout() {
+  state.authenticated  = false;
+  state.tickets        = [];
+  state.dashboardData  = null;
+  state.filteredTickets = [];
+
+  $('loginPassword').value  = '';
+  $('loginError').style.display = 'none';
+  $('loginBtn').disabled    = false;
+
+  const lp = $('loginPage');
+  lp.style.opacity    = '1';
+  lp.style.transition = '';
+  lp.classList.remove('hidden');
+  $('appShell').classList.add('hidden');
+}
+
+/* ----------------------------------------------------------------
+   VIEW ROUTING
+---------------------------------------------------------------- */
+function showView(viewName) {
+  state.currentView = viewName;
+
+  // Nav highlight
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navIds = { dashboard: 'navDashboard', tickets: 'navTickets' };
+  if (navIds[viewName]) $(navIds[viewName]).classList.add('active');
+
+  // Topbar title
+  const titles = { dashboard: 'Dashboard', tickets: 'Tickets' };
+  $('topbarTitle').textContent = titles[viewName] || 'TicketDesk';
+
+  // Show/hide view panels
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const panel = $('view' + viewName[0].toUpperCase() + viewName.slice(1));
+  if (panel) panel.classList.add('active');
+
+  // Lazy-load data
+  if (viewName === 'dashboard' && !state.dashboardData && !state.loadingDashboard) {
+    loadDashboard();
+  }
+  if (viewName === 'tickets' && !state.tickets.length && !state.loadingTickets) {
+    loadTickets();
+  }
+}
+
+function refreshCurrentView() {
+  state.dashboardData  = null;
+  state.tickets        = [];
+  state.filteredTickets = [];
+
+  if (state.currentView === 'dashboard') {
+    resetKpiSpinners();
+    $('dashboardTableBody').innerHTML = '<tr class="loading-row"><td colspan="9"><span class="spinner"></span>Refreshing…</td></tr>';
+    loadDashboard();
+  } else if (state.currentView === 'tickets') {
+    $('ticketsTableBody').innerHTML = '<tr class="loading-row"><td colspan="17"><span class="spinner"></span>Refreshing…</td></tr>';
+    $('ticketCount').textContent = 'Loading…';
+    loadTickets();
+  }
+  toast('Refreshing data…', 'info');
+}
+
+/* ----------------------------------------------------------------
+   DASHBOARD — Load & render
+---------------------------------------------------------------- */
+function resetKpiSpinners() {
+  const ids = ['kpiInvested','kpiRevenue','kpiProfit','kpiRoi','kpiSold','kpiActive'];
+  ids.forEach(id => {
+    $(id).innerHTML   = '<span class="spinner"></span>';
+    $(id).className   = 'kpi-value';
   });
 }
 
-function logout() { sessionStorage.removeItem(PWD_KEY); location.reload(); }
+async function loadDashboard() {
+  if (state.loadingDashboard) return;
+  state.loadingDashboard = true;
 
-function showApp() {
-  document.getElementById('loginWrap').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  loadAll();
+  const data = await apiGet({ action: 'getDashboard' });
+  state.loadingDashboard = false;
+
+  if (!data) {
+    // Show dashes on failure
+    ['kpiInvested','kpiRevenue','kpiProfit','kpiRoi','kpiSold','kpiActive']
+      .forEach(id => { $(id).textContent = '—'; $(id).className = 'kpi-value'; });
+    $('dashboardTableBody').innerHTML = `
+      <tr><td colspan="9">
+        <div class="empty-state">
+          <p>Unable to load data. Check network or API configuration.</p>
+        </div>
+      </td></tr>`;
+    toast('Dashboard data unavailable — check API.', 'error');
+    return;
+  }
+
+  state.dashboardData = data;
+  renderKpis(data);
+  renderDashboardTable(data.breakdown || []);
 }
 
-// Check session
-if (sessionStorage.getItem(PWD_KEY)) showApp();
+function renderKpis(d) {
+  const inv  = parseFloat(d.totalInvested) || 0;
+  const rev  = parseFloat(d.totalRevenue)  || 0;
+  const prof = parseFloat(d.netProfit)     || 0;
+  const roi  = parseFloat(d.avgRoi)        || 0;
+  const sold = parseInt(d.ticketsSold, 10) || 0;
+  const act  = parseInt(d.activeEvents,10) || 0;
 
-// ── API ──
-function apiCall(params) {
-  const url = API + '?' + new URLSearchParams(params).toString();
-  return fetch(url, { redirect: 'follow' }).then(r => r.json());
+  $('kpiInvested').textContent = fmtEur(inv);
+  $('kpiInvested').className   = 'kpi-value blue';
+
+  $('kpiRevenue').textContent  = fmtEur(rev);
+  $('kpiRevenue').className    = 'kpi-value blue';
+
+  $('kpiProfit').textContent   = fmtEur(prof);
+  $('kpiProfit').className     = `kpi-value ${prof >= 0 ? 'profit' : 'loss'}`;
+
+  $('kpiRoi').textContent      = fmtPct(roi);
+  $('kpiRoi').className        = `kpi-value ${roi >= 0 ? 'profit' : 'loss'}`;
+
+  $('kpiSold').textContent     = fmtInt(sold);
+  $('kpiSold').className       = 'kpi-value blue';
+
+  $('kpiActive').textContent   = fmtInt(act);
+  $('kpiActive').className     = 'kpi-value blue';
 }
 
-// ── DATA ──
-function loadAll() { loadKPI(); loadTickets(); }
+function renderDashboardTable(rows) {
+  const tbody = $('dashboardTableBody');
 
-function loadKPI() {
-  apiCall({ action:'getDashboard' }).then(d => {
-    if (!d || d.error) return;
-    const p = d.netProfit || 0;
-    document.getElementById('kpiRow').innerHTML = `
-      <div class="kpi"><div class="kpi-lbl">Total Invested</div><div class="kpi-val">${fmtE(d.totalInvested)}</div></div>
-      <div class="kpi"><div class="kpi-lbl">Total Revenue</div><div class="kpi-val pos">${fmtE(d.totalRevenue)}</div></div>
-      <div class="kpi"><div class="kpi-lbl">Net Profit</div><div class="kpi-val ${p>=0?'pos':'neg'}">${p>=0?'+':''}${fmtE(p)}</div></div>
-      <div class="kpi"><div class="kpi-lbl">AVG ROI (sold)</div><div class="kpi-val pur">${d.avgRoi?d.avgRoi.toFixed(1)+'%':'—'}</div></div>
-      <div class="kpi"><div class="kpi-lbl">Tickets Sold</div><div class="kpi-val blu">${d.ticketsSold}</div></div>
-      <div class="kpi"><div class="kpi-lbl">Active Events</div><div class="kpi-val amb">${d.activeEvents}</div></div>
-    `;
-  });
-}
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = `
+      <tr><td colspan="9">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7H5v2h2V7z"/>
+          </svg>
+          <p>No breakdown data returned from the API.</p>
+        </div>
+      </td></tr>`;
+    return;
+  }
 
-function loadTickets() {
-  document.getElementById('tBody').innerHTML = '<tr><td colspan="14" class="loading-cell"><div class="spin"></div>Načítavam...</td></tr>';
-  apiCall({ action:'getTickets' }).then(d => {
-    tickets = (d && d.tickets) || [];
-    renderTable(tickets);
-  });
-}
-
-function renderTable(rows) {
-  const b = document.getElementById('tBody');
-  if (!rows.length) { b.innerHTML = '<tr><td colspan="14" class="loading-cell">Žiadne lístky</td></tr>'; return; }
-  b.innerHTML = rows.map(t => {
-    const pr = parseFloat(t.profit) || 0;
-    return `<tr>
-      <td class="num"><b>${t.num}</b></td>
-      <td><b>${esc(t.artist)}</b></td>
-      <td>${esc(t.country)}</td>
-      <td>${esc(t.date)}</td>
-      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;color:var(--mid)">${esc(t.section)}</td>
-      <td style="text-align:center;font-weight:600">${t.qty}</td>
-      <td style="color:var(--mid)">${esc(t.boughtAt)}</td>
-      <td class="money">${fmtN(t.buyPrice)}</td>
-      <td class="money">${t.sellPrice ? fmtN(t.sellPrice) : '<span style="color:var(--soft)">—</span>'}</td>
-      <td class="${pr>0?'green':pr<0?'red':'money'}">${t.profit ? (pr>=0?'+':'')+fmtN(pr) : '—'}</td>
-      <td style="font-weight:700;color:var(--mid)">${t.roi||'—'}</td>
-      <td>${sBadge(t.status)}</td>
-      <td>${pBadge(t.paid)}</td>
-      <td><button class="btn-edit" onclick="openEdit(${t.rowIndex})">Upraviť</button></td>
-    </tr>`;
+  tbody.innerHTML = rows.map((r, i) => {
+    const profit = parseFloat(r.profit) || 0;
+    const roi    = parseFloat(r.roi)    || 0;
+    const pCls   = profit >= 0 ? 'text-green' : 'text-red';
+    const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
+    return `
+      <tr>
+        <td class="text-muted">${i + 1}</td>
+        <td class="bold truncate" style="max-width:180px;" title="${esc(r.artist)}">${esc(r.artist || '—')}</td>
+        <td>${esc(r.country || '—')}</td>
+        <td class="num">${fmtInt(r.qty)}</td>
+        <td class="num">${fmtEur(r.invested)}</td>
+        <td class="num">${fmtEur(r.revenue)}</td>
+        <td class="num bold ${pCls}">${fmtEur(profit)}</td>
+        <td class="num ${rCls}">${fmtPct(roi)}</td>
+        <td>${badge(r.status || 'ACTIVE', statusClass(r.status || 'ACTIVE'))}</td>
+      </tr>`;
   }).join('');
 }
 
-function sBadge(s) {
-  if (!s) return '<span style="color:var(--soft)">—</span>';
-  const cls = s.includes('Transferred') ? 'b-transfer' : s==='Listed' ? 'b-listed' : s==='Pending' ? 'b-pending' : 'b-listed';
-  return `<span class="badge ${cls}">${s}</span>`;
-}
-function pBadge(p) {
-  if (!p) return '<span style="color:var(--soft)">—</span>';
-  return `<span class="badge ${p==='ANO'?'b-ano':'b-nie'}">${p}</span>`;
+/* ----------------------------------------------------------------
+   TICKETS — Load, filter & render
+---------------------------------------------------------------- */
+async function loadTickets() {
+  if (state.loadingTickets) return;
+  state.loadingTickets = true;
+  $('ticketCount').textContent = 'Loading…';
+
+  const data = await apiGet({ action: 'getTickets' });
+  state.loadingTickets = false;
+
+  if (!data) {
+    $('ticketsTableBody').innerHTML = `
+      <tr><td colspan="17">
+        <div class="empty-state"><p>Unable to load tickets. Check API connection.</p></div>
+      </td></tr>`;
+    $('ticketCount').textContent = 'Error';
+    toast('Could not load tickets.', 'error');
+    return;
+  }
+
+  state.tickets        = data.tickets || [];
+  state.filteredTickets = [...state.tickets];
+  renderTicketsTable(state.filteredTickets);
 }
 
-function fmtE(n) { return (n||0).toLocaleString('sk-SK',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
-function fmtN(n) { return Number(n||0).toLocaleString('sk-SK',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function esc(s) { return String(s||'').replace(/</g,'&lt;'); }
-
-function filterTable(q) {
-  q = q.toLowerCase();
-  renderTable(tickets.filter(t =>
-    [t.artist,t.country,t.date,t.section,t.status,t.boughtAt,t.soldAt,t.notes]
-    .some(v => String(v||'').toLowerCase().includes(q))
-  ));
+function filterTickets() {
+  const q = $('ticketSearch').value.toLowerCase().trim();
+  if (!q) {
+    state.filteredTickets = [...state.tickets];
+  } else {
+    state.filteredTickets = state.tickets.filter(t =>
+      [t.artist, t.country, t.status, t.soldAt, t.boughtAt, t.account, t.notes, t.section, t.listed]
+        .some(f => (f || '').toLowerCase().includes(q))
+    );
+  }
+  renderTicketsTable(state.filteredTickets);
 }
 
-// ── MODAL ──
-function openAdd() {
-  editRow = null;
-  document.getElementById('mTitle').textContent = 'Nový lístok';
-  document.getElementById('btnDel').style.display = 'none';
-  clearForm();
-  document.getElementById('overlay').classList.add('open');
+function renderTicketsTable(tickets) {
+  const n = tickets.length;
+  $('ticketCount').textContent = `${n} ticket${n !== 1 ? 's' : ''}`;
+
+  const tbody = $('ticketsTableBody');
+
+  if (!n) {
+    tbody.innerHTML = `
+      <tr><td colspan="17">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 2.54 16.5 1 14.66 1c-1.05 0-1.96.54-2.48 1.36L12 3.4l-.18-.04C11.3 1.54 10.39 1 9.34 1 7.5 1 6 2.54 6 4.66c0 .46.11.9.18 1.34H4c-1.11 0-2 .89-2 2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+          </svg>
+          <p>No tickets found.</p>
+        </div>
+      </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = tickets.map(t => {
+    const profit = parseFloat(t.profit) || 0;
+    const roi    = parseFloat(t.roi)    || 0;
+    const pCls   = profit >= 0 ? 'text-green' : 'text-red';
+    const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
+    // Safely stringify rowIndex for onclick attribute
+    const ri = JSON.stringify(String(t.rowIndex ?? ''));
+    return `
+      <tr>
+        <td class="text-muted font-mono" style="font-size:.75rem;">${esc(t.num ?? t.rowIndex ?? '—')}</td>
+        <td class="bold truncate" title="${esc(t.artist)}">${esc(t.artist || '—')}</td>
+        <td>${esc(t.country || '—')}</td>
+        <td class="text-muted" style="font-size:.79rem;">${esc(t.date || '—')}</td>
+        <td class="truncate" title="${esc(t.section)}" style="max-width:140px;">${esc(t.section || '—')}</td>
+        <td class="num">${esc(t.qty ?? '—')}</td>
+        <td class="truncate" title="${esc(t.boughtAt)}" style="max-width:110px;">${esc(t.boughtAt || '—')}</td>
+        <td class="truncate" title="${esc(t.account)}" style="max-width:120px;">${esc(t.account || '—')}</td>
+        <td class="num">${fmtEur(t.buyPrice)}</td>
+        <td class="num">${fmtEur(t.sellPrice)}</td>
+        <td class="num bold ${pCls}">${fmtEur(profit)}</td>
+        <td class="num ${rCls}">${fmtPct(roi)}</td>
+        <td class="truncate" title="${esc(t.soldAt)}" style="max-width:110px;">${esc(t.soldAt || '—')}</td>
+        <td>${badge(t.status || '—', statusClass(t.status))}</td>
+        <td class="truncate" title="${esc(t.listed)}" style="max-width:90px;">${esc(t.listed || '—')}</td>
+        <td>${badge(t.paid || 'NIE', paidClass(t.paid))}</td>
+        <td>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn-icon" title="Edit ticket" onclick="openEditModal(${ri})">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
 }
-function openEdit(ri) {
-  const t = tickets.find(x => x.rowIndex === ri);
-  if (!t) return;
-  editRow = ri;
-  document.getElementById('mTitle').textContent = 'Upraviť · ' + t.artist;
-  document.getElementById('btnDel').style.display = 'block';
-  setV('f_artist',t.artist); setV('f_country',t.country); setV('f_date',t.date);
-  setV('f_section',t.section); setV('f_qty',t.qty||1); setV('f_boughtAt',t.boughtAt);
-  setV('f_account',t.account); setV('f_buyPrice',t.buyPrice); setV('f_sellPrice',t.sellPrice);
-  setV('f_soldAt',t.soldAt); setV('f_status',t.status); setV('f_listed',t.listed);
-  setV('f_paid',t.paid); setV('f_notes',t.notes);
-  document.getElementById('overlay').classList.add('open');
-}
-function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+
+/* ----------------------------------------------------------------
+   MODAL — Add & Edit
+---------------------------------------------------------------- */
 function clearForm() {
-  ['f_artist','f_country','f_date','f_section','f_boughtAt','f_account','f_buyPrice','f_sellPrice','f_soldAt','f_listed','f_notes'].forEach(id => setV(id,''));
-  setV('f_qty',1); setV('f_status',''); setV('f_paid','');
-}
-function setV(id,v) { document.getElementById(id).value = v||''; }
-function gV(id) { return document.getElementById(id).value; }
-
-function getForm() {
-  return { artist:gV('f_artist'), country:gV('f_country'), date:gV('f_date'),
-    section:gV('f_section'), qty:gV('f_qty'), boughtAt:gV('f_boughtAt'),
-    account:gV('f_account'), buyPrice:gV('f_buyPrice'), sellPrice:gV('f_sellPrice'),
-    soldAt:gV('f_soldAt'), status:gV('f_status'), listed:gV('f_listed'),
-    paid:gV('f_paid'), notes:gV('f_notes') };
+  ['fRowIndex','fArtist','fCountry','fEventDate','fSection','fQty',
+   'fBoughtAt','fAccount','fBuyPrice','fSellPrice','fSoldAt','fListed','fNotes']
+    .forEach(id => { $(id).value = ''; });
+  $('fStatus').value = '';
+  $('fPaid').value   = 'NIE';
+  updateComputedDisplay(null, null);
 }
 
-function saveTicket() {
-  const d = getForm();
-  if (!d.artist || !d.buyPrice) { toast('Vyplň Umelca a Kúpnú cenu!','err'); return; }
-  const p = editRow ? { action:'updateTicket', rowIndex:editRow, ...d } : { action:'addTicket', ...d };
-  apiCall(p).then(r => {
-    if (r && r.ok) { closeModal(); toast(editRow?'Aktualizované ✓':'Lístok pridaný ✓','ok'); setTimeout(loadAll,1000); }
-    else toast('Chyba: '+(r&&r.error||'?'),'err');
-  }).catch(() => toast('Chyba spojenia','err'));
+function openAddModal() {
+  clearForm();
+  $('modalTitle').textContent    = 'Add New Ticket';
+  $('modalSubtitle').textContent = 'Complete all relevant fields to add to your portfolio';
+  $('btnDelete').classList.add('hidden');
+  $('btnSave').innerHTML = `
+    <svg viewBox="0 0 24 24" fill="white" width="14" height="14">
+      <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+    </svg>
+    Save Ticket`;
+  $('ticketModal').classList.remove('hidden');
+  setTimeout(() => $('fArtist').focus(), 80);
 }
 
-function deleteTicket() {
-  if (!editRow || !confirm('Vymazať tento lístok?')) return;
-  apiCall({ action:'deleteTicket', rowIndex:editRow }).then(r => {
-    if (r && r.ok) { closeModal(); toast('Lístok vymazaný','err'); setTimeout(loadAll,1000); }
-  });
+function openEditModal(rowIndexStr) {
+  const ticket = state.tickets.find(t => String(t.rowIndex) === String(rowIndexStr));
+  if (!ticket) { toast('Ticket data not found.', 'error'); return; }
+
+  clearForm();
+  $('modalTitle').textContent    = 'Edit Ticket';
+  $('modalSubtitle').textContent = `Editing row #${rowIndexStr}${ticket.artist ? ' — ' + ticket.artist : ''}`;
+  $('btnDelete').classList.remove('hidden');
+  $('btnSave').innerHTML = `
+    <svg viewBox="0 0 24 24" fill="white" width="14" height="14">
+      <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+    </svg>
+    Update Ticket`;
+
+  // Populate fields
+  $('fRowIndex').value  = ticket.rowIndex  ?? '';
+  $('fArtist').value    = ticket.artist    ?? '';
+  $('fCountry').value   = ticket.country   ?? '';
+  $('fEventDate').value = ticket.date      ?? '';
+  $('fSection').value   = ticket.section   ?? '';
+  $('fQty').value       = ticket.qty       ?? '';
+  $('fBoughtAt').value  = ticket.boughtAt  ?? '';
+  $('fAccount').value   = ticket.account   ?? '';
+  $('fBuyPrice').value  = ticket.buyPrice  ?? '';
+  $('fSellPrice').value = ticket.sellPrice ?? '';
+  $('fSoldAt').value    = ticket.soldAt    ?? '';
+  $('fListed').value    = ticket.listed    ?? '';
+  $('fNotes').value     = ticket.notes     ?? '';
+
+  // Status
+  if (ticket.status) {
+    const opt = Array.from($('fStatus').options).find(o => o.value === ticket.status);
+    $('fStatus').value = opt ? ticket.status : '';
+  }
+
+  // Paid
+  $('fPaid').value = (ticket.paid || '').toUpperCase() === 'ANO' ? 'ANO' : 'NIE';
+
+  computeFields();
+  $('ticketModal').classList.remove('hidden');
 }
 
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  document.getElementById('toastIcon').textContent = type==='ok'?'✓':'⚠';
-  document.getElementById('toastMsg').textContent = msg;
-  el.className = 'toast show ' + type;
-  setTimeout(() => el.className = 'toast', 3000);
+function closeModal() {
+  $('ticketModal').classList.add('hidden');
 }
 
-document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
+function handleModalBgClick(e) {
+  if (e.target === $('ticketModal')) closeModal();
+}
+
+/* ----------------------------------------------------------------
+   COMPUTED PROFIT & ROI
+---------------------------------------------------------------- */
+function computeFields() {
+  const buy  = parseFloat($('fBuyPrice').value)  || 0;
+  const sell = parseFloat($('fSellPrice').value) || 0;
+  const qty  = Math.max(parseInt($('fQty').value, 10) || 1, 1);
+  updateComputedDisplay(buy > 0 || sell > 0 ? { buy, sell, qty } : null, null);
+}
+
+function updateComputedDisplay(vals) {
+  const profEl = $('computedProfit');
+  const roiEl  = $('computedRoi');
+
+  if (!vals) {
+    profEl.textContent = '—'; profEl.className = 'computed-value';
+    roiEl.textContent  = '—'; roiEl.className  = 'computed-value';
+    return;
+  }
+
+  const { buy, sell, qty } = vals;
+  const profit = (sell * qty) - (buy * qty);
+  const roi    = buy > 0 ? (profit / (buy * qty)) * 100 : 0;
+
+  profEl.textContent = fmtEur(profit);
+  profEl.className   = `computed-value ${profit > 0 ? 'pos' : profit < 0 ? 'neg' : ''}`;
+
+  roiEl.textContent  = fmtPct(roi);
+  roiEl.className    = `computed-value ${roi > 0 ? 'pos' : roi < 0 ? 'neg' : ''}`;
+}
+
+/* ----------------------------------------------------------------
+   SAVE TICKET (add or update)
+---------------------------------------------------------------- */
+async function saveTicket() {
+  const rowIndex = $('fRowIndex').value.trim();
+  const isEdit   = rowIndex !== '';
+
+  // Validation
+  if (!$('fArtist').value.trim()) {
+    toast('Artist / Event name is required.', 'error');
+    $('fArtist').focus();
+    return;
+  }
+
+  const btn      = $('btnSave');
+  const origHTML = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = '<span class="spinner"></span> Saving…';
+
+  // Build GET params matching the API contract
+  const buy  = parseFloat($('fBuyPrice').value)  || 0;
+  const sell = parseFloat($('fSellPrice').value) || 0;
+  const qty  = Math.max(parseInt($('fQty').value, 10) || 1, 1);
+  const profit = ((sell * qty) - (buy * qty)).toFixed(2);
+  const roi    = buy > 0 ? (((sell * qty - buy * qty) / (buy * qty)) * 100).toFixed(2) : '0';
+
+  const params = {
+    action:    isEdit ? 'updateTicket' : 'addTicket',
+    artist:    $('fArtist').value.trim(),
+    country:   $('fCountry').value.trim(),
+    date:      $('fEventDate').value.trim(),
+    section:   $('fSection').value.trim(),
+    qty:       String(qty),
+    boughtAt:  $('fBoughtAt').value.trim(),
+    account:   $('fAccount').value.trim(),
+    buyPrice:  String(buy),
+    sellPrice: String(sell),
+    profit,
+    roi,
+    soldAt:    $('fSoldAt').value.trim(),
+    status:    $('fStatus').value,
+    listed:    $('fListed').value.trim(),
+    notes:     $('fNotes').value.trim(),
+    paid:      $('fPaid').value,
+  };
+  if (isEdit) params.rowIndex = rowIndex;
+
+  const result = await apiGet(params);
+
+  btn.disabled  = false;
+  btn.innerHTML = origHTML;
+
+  // null = no-cors fallback (write still likely succeeded)
+  if (result === null) {
+    toast(isEdit ? 'Update sent (awaiting confirmation).' : 'Ticket added (awaiting confirmation).', 'info');
+  } else if (result.success === false) {
+    toast('API error: ' + (result.message || 'Unknown error'), 'error');
+    return;
+  } else {
+    toast(isEdit ? 'Ticket updated successfully!' : 'Ticket added successfully!', 'success');
+  }
+
+  closeModal();
+  await reloadAfterChange();
+}
+
+/* ----------------------------------------------------------------
+   DELETE TICKET
+---------------------------------------------------------------- */
+async function deleteTicket() {
+  const rowIndex = $('fRowIndex').value.trim();
+  if (!rowIndex) return;
+
+  if (!confirm('Permanently delete this ticket? This action cannot be undone.')) return;
+
+  const btn      = $('btnDelete');
+  const origHTML = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = '<span class="spinner"></span> Deleting…';
+
+  const result = await apiGet({ action: 'deleteTicket', rowIndex });
+
+  btn.disabled  = false;
+  btn.innerHTML = origHTML;
+
+  if (result === null) {
+    toast('Delete sent (awaiting confirmation).', 'info');
+  } else if (result.success === false) {
+    toast('Delete failed: ' + (result.message || 'Unknown error'), 'error');
+    return;
+  } else {
+    toast('Ticket deleted.', 'success');
+  }
+
+  closeModal();
+  await reloadAfterChange();
+}
+
+/* ----------------------------------------------------------------
+   RELOAD DATA AFTER A MUTATION
+---------------------------------------------------------------- */
+async function reloadAfterChange() {
+  state.tickets        = [];
+  state.dashboardData  = null;
+  state.filteredTickets = [];
+
+  if (state.currentView === 'tickets') {
+    $('ticketsTableBody').innerHTML = '<tr class="loading-row"><td colspan="17"><span class="spinner"></span>Reloading…</td></tr>';
+    $('ticketCount').textContent = 'Loading…';
+    await loadTickets();
+  } else {
+    resetKpiSpinners();
+    $('dashboardTableBody').innerHTML = '<tr class="loading-row"><td colspan="9"><span class="spinner"></span>Reloading…</td></tr>';
+    await loadDashboard();
+  }
+}
+
+/* ----------------------------------------------------------------
+   KEYBOARD SHORTCUTS
+---------------------------------------------------------------- */
+document.addEventListener('keydown', e => {
+  // Escape — close open modal
+  if (e.key === 'Escape' && !$('ticketModal').classList.contains('hidden')) {
+    closeModal();
+    return;
+  }
+  // Ctrl/Cmd + N — open add modal (when app authenticated)
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n' && state.authenticated) {
+    e.preventDefault();
+    openAddModal();
+  }
+});
 </script>
+
 </body>
 </html>

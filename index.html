@@ -1837,7 +1837,7 @@ function renderTicketsTable(tickets) {
     const pCls   = profit >= 0 ? 'text-green' : 'text-red';
     const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
     // Safely stringify rowIndex for onclick attribute
-    const ri = JSON.stringify(String(t.rowIndex ?? ''));
+    const ri = t.rowIndex;
     return `
       <tr>
         <td class="text-muted font-mono" style="font-size:.75rem;">${esc(t.num ?? t.rowIndex ?? '—')}</td>
@@ -1997,11 +1997,12 @@ async function saveTicket() {
 
   // Build GET params matching the API contract
   // buyPrice and sellPrice are total prices for the entire lot (not per ticket)
-  const buy  = parseFloat($('fBuyPrice').value)  || 0;
-  const sell = parseFloat($('fSellPrice').value) || 0;
-  const qty  = Math.max(parseInt($('fQty').value, 10) || 1, 1);
-  const profit = (sell - buy).toFixed(2);
-  const roi    = buy > 0 ? (((sell - buy) / buy) * 100).toFixed(2) : '0';
+  const buy     = parseFloat($('fBuyPrice').value)  || 0;
+  const sellRaw = $('fSellPrice').value.trim();
+  const sell    = sellRaw !== '' ? (parseFloat(sellRaw) || 0) : 0;
+  const qty     = Math.max(parseInt($('fQty').value, 10) || 1, 1);
+  const profit  = sellRaw !== '' ? (sell - buy).toFixed(2) : '';
+  const roi     = sellRaw !== '' && buy > 0 ? (((sell - buy) / buy) * 100).toFixed(2) : '0';
 
   const params = {
     action:    isEdit ? 'updateTicket' : 'addTicket',
@@ -2013,7 +2014,7 @@ async function saveTicket() {
     boughtAt:  $('fBoughtAt').value.trim(),
     account:   $('fAccount').value.trim(),
     buyPrice:  String(buy),
-    sellPrice: String(sell),
+    sellPrice: sellRaw !== '' ? String(sell) : '',
     profit,
     roi,
     soldAt:    $('fSoldAt').value.trim(),

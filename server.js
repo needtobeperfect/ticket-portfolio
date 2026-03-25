@@ -163,7 +163,7 @@ function getTickets(dataRows) {
 
 async function addTicket(p) {
   const api = await sheetsApi();
-  const { dataRows, totalRowIndex } = await readSheet();
+  const { dataRows } = await readSheet();
 
   const buyPrice  = parseFloat(p.buyPrice)  || 0;
   const sellPrice = parseFloat(p.sellPrice) || 0;
@@ -194,35 +194,32 @@ async function addTicket(p) {
     p.paid     || '',
   ];
 
-  let targetRow;
+  // Find the last numbered ticket row (by highest sheetRow among dataRows)
+  const lastTicketSheetRow = dataRows.length > 0
+    ? Math.max(...dataRows.map(r => r.sheetRow))
+    : 1;
 
-  if (totalRowIndex > 0) {
-    // Insert a blank row just before the TOTAL row so its formulas expand
-    const sheetId = await getSheetId(api);
-    await api.spreadsheets.batchUpdate({
-      spreadsheetId: SHEET_ID,
-      requestBody: {
-        requests: [{
-          insertDimension: {
-            range: {
-              sheetId,
-              dimension:  'ROWS',
-              startIndex: totalRowIndex - 1,  // 0-indexed
-              endIndex:   totalRowIndex,
-            },
-            inheritFromBefore: true,
+  // Always insert a new row immediately after the last ticket.
+  // This pushes the TOTAL row (and anything below) down automatically.
+  const sheetId = await getSheetId(api);
+  await api.spreadsheets.batchUpdate({
+    spreadsheetId: SHEET_ID,
+    requestBody: {
+      requests: [{
+        insertDimension: {
+          range: {
+            sheetId,
+            dimension:  'ROWS',
+            startIndex: lastTicketSheetRow,       // 0-indexed = row after last ticket
+            endIndex:   lastTicketSheetRow + 1,
           },
-        }],
-      },
-    });
-    targetRow = totalRowIndex;  // the newly inserted row
-  } else {
-    // No TOTAL row — append after last data row
-    const last = dataRows.length > 0
-                 ? dataRows[dataRows.length - 1].sheetRow
-                 : 1;
-    targetRow = last + 1;
-  }
+          inheritFromBefore: true,
+        },
+      }],
+    },
+  });
+
+  const targetRow = lastTicketSheetRow + 1;   // 1-indexed row of the new blank row
 
   await api.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,

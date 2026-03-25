@@ -1,0 +1,5 @@
+node_modules/
+.env
+# Service account keys — never commit
+*-0ab9e684890e.json
+api1-*.json

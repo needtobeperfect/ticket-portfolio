@@ -1951,8 +1951,7 @@ function handleModalBgClick(e) {
 function computeFields() {
   const buy  = parseFloat($('fBuyPrice').value)  || 0;
   const sell = parseFloat($('fSellPrice').value) || 0;
-  const qty  = Math.max(parseInt($('fQty').value, 10) || 1, 1);
-  updateComputedDisplay(buy > 0 || sell > 0 ? { buy, sell, qty } : null, null);
+  updateComputedDisplay(buy > 0 || sell > 0 ? { buy, sell } : null);
 }
 
 function updateComputedDisplay(vals) {
@@ -1965,9 +1964,10 @@ function updateComputedDisplay(vals) {
     return;
   }
 
-  const { buy, sell, qty } = vals;
-  const profit = (sell * qty) - (buy * qty);
-  const roi    = buy > 0 ? (profit / (buy * qty)) * 100 : 0;
+  // buyPrice and sellPrice are total prices for the entire lot
+  const { buy, sell } = vals;
+  const profit = sell - buy;
+  const roi    = buy > 0 ? (profit / buy) * 100 : 0;
 
   profEl.textContent = fmtEur(profit);
   profEl.className   = `computed-value ${profit > 0 ? 'pos' : profit < 0 ? 'neg' : ''}`;
@@ -1996,11 +1996,12 @@ async function saveTicket() {
   btn.innerHTML  = '<span class="spinner"></span> Saving…';
 
   // Build GET params matching the API contract
+  // buyPrice and sellPrice are total prices for the entire lot (not per ticket)
   const buy  = parseFloat($('fBuyPrice').value)  || 0;
   const sell = parseFloat($('fSellPrice').value) || 0;
   const qty  = Math.max(parseInt($('fQty').value, 10) || 1, 1);
-  const profit = ((sell * qty) - (buy * qty)).toFixed(2);
-  const roi    = buy > 0 ? (((sell * qty - buy * qty) / (buy * qty)) * 100).toFixed(2) : '0';
+  const profit = (sell - buy).toFixed(2);
+  const roi    = buy > 0 ? (((sell - buy) / buy) * 100).toFixed(2) : '0';
 
   const params = {
     action:    isEdit ? 'updateTicket' : 'addTicket',

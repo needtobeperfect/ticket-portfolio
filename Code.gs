@@ -199,11 +199,11 @@ function addTicket(p) {
   ];
 
   var sheet = getSheet();
-  // Insert directly before the TOTAL row (or after last data row if no TOTAL)
-  var res2      = readSheet();
-  var insertAt  = res2.totalRowIndex > 0
-    ? res2.totalRowIndex - 1          // last ticket row = TOTAL row - 1
-    : Math.max.apply(null, res2.dataRows.map(function(r) { return r.sheetRow; }));
+  // Insert directly after the last real ticket row
+  var res2     = readSheet();
+  var insertAt = res2.dataRows.length > 0
+    ? res2.dataRows[res2.dataRows.length - 1].sheetRow
+    : 1;
 
   sheet.insertRowAfter(insertAt);
   var targetRow = insertAt + 1;

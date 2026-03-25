@@ -8,14 +8,16 @@ const app = express();
 const SHEET_ID   = process.env.SHEET_ID;
 const SHEET_NAME = process.env.SHEET_NAME || 'LISTKY';
 const KEY_FILE   = process.env.GOOGLE_KEY_FILE;
+const KEY_JSON   = process.env.GOOGLE_KEY_JSON;   // for cloud deployment (Railway etc.)
 const PORT       = parseInt(process.env.PORT) || 3000;
 const PASSWORD   = process.env.PASSWORD;
 
 // ── Google Auth ──────────────────────────────────────────────────
-const auth = new google.auth.GoogleAuth({
-  keyFile: KEY_FILE,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+const authConfig = KEY_JSON
+  ? { credentials: JSON.parse(KEY_JSON), scopes: ['https://www.googleapis.com/auth/spreadsheets'] }
+  : { keyFile: KEY_FILE,                 scopes: ['https://www.googleapis.com/auth/spreadsheets'] };
+
+const auth = new google.auth.GoogleAuth(authConfig);
 
 async function sheetsApi() {
   const client = await auth.getClient();
@@ -23,6 +25,13 @@ async function sheetsApi() {
 }
 
 // ── Middleware ───────────────────────────────────────────────────
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
@@ -95,9 +104,11 @@ function getDashboard(dataRows) {
     const ks     = parseInt(r[5], 10) || 0;
     const status = String(r[13] || '').trim();
 
-    totalInvested += nakup;
+    const totalNakup  = nakup  * ks;   // total invested for this row
+    const totalPredaj = predaj * ks;   // total revenue for this row
+    totalInvested += totalNakup;
 
-    const rowProfit = predaj > 0 ? round2(predaj - nakup) : 0;
+    const rowProfit = predaj > 0 ? round2(totalPredaj - totalNakup) : 0;
     const rowRoi    = nakup > 0 && predaj > 0
                       ? round1((predaj - nakup) / nakup * 100)
                       : 0;
@@ -106,17 +117,17 @@ function getDashboard(dataRows) {
       artist:   String(r[1] || ''),
       country:  String(r[2] || ''),
       qty:      ks,
-      invested: round2(nakup),
-      revenue:  round2(predaj),
+      invested: round2(totalNakup),
+      revenue:  round2(totalPredaj),
       profit:   rowProfit,
       roi:      rowRoi,
       status:   status || (predaj > 0 ? 'SOLD' : 'ACTIVE'),
     });
 
     if (predaj > 0) {
-      totalRevenue += predaj;
+      totalRevenue += totalPredaj;
       ticketsSold  += ks;
-      soldInvested += nakup;
+      soldInvested += totalNakup;
     } else {
       activeEvents++;
     }
@@ -168,7 +179,7 @@ async function addTicket(p) {
   const buyPrice  = parseFloat(p.buyPrice)  || 0;
   const sellPrice = parseFloat(p.sellPrice) || 0;
   const qty       = parseInt(p.qty, 10)     || 1;
-  const profit    = sellPrice > 0 ? round2(sellPrice - buyPrice) : '';
+  const profit    = sellPrice > 0 ? round2((sellPrice - buyPrice) * qty) : '';
   const roi       = sellPrice > 0 && buyPrice > 0
                     ? round1((sellPrice - buyPrice) / buyPrice * 100) + '%'
                     : '';
@@ -236,7 +247,8 @@ async function updateTicket(p) {
   const rowIndex  = parseInt(p.rowIndex, 10);
   const buyPrice  = parseFloat(p.buyPrice)  || 0;
   const sellPrice = parseFloat(p.sellPrice) || 0;
-  const profit    = sellPrice > 0 ? round2(sellPrice - buyPrice) : '';
+  const qty       = parseInt(p.qty, 10)     || 1;
+  const profit    = sellPrice > 0 ? round2((sellPrice - buyPrice) * qty) : '';
   const roi       = sellPrice > 0 && buyPrice > 0
                     ? round1((sellPrice - buyPrice) / buyPrice * 100) + '%'
                     : '';
@@ -246,7 +258,7 @@ async function updateTicket(p) {
     p.country  || '',
     p.date     || '',
     p.section  || '',
-    parseInt(p.qty, 10) || 1,
+    qty,
     p.boughtAt || '',
     p.account  || '',
     buyPrice,

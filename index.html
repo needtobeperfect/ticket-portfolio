@@ -1397,7 +1397,10 @@
    CONSTANTS
 ---------------------------------------------------------------- */
 const PASSWORD = 'JovByHuv1111';
-const API_URL  = '/api';
+// Backend URL: lokálne → '/api', GitHub Pages → Railway URL
+const API_URL  = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? '/api'
+  : 'https://ticket-portfolio-production.up.railway.app/api';
 
 /* ----------------------------------------------------------------
    APP STATE

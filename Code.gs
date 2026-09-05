@@ -173,7 +173,8 @@ function addTicket(p) {
   var buyPrice  = parseFloat(p.buyPrice)  || 0;
   var sellPrice = parseFloat(p.sellPrice) || 0;
   var qty       = parseInt(p.qty, 10)     || 1;
-  var profit    = sellPrice > 0 ? round2((sellPrice - buyPrice) * qty) : '';
+  // buyPrice/sellPrice su TOTALY za cely riadok (uz zahrnaju qty) - nenasobit
+  var profit    = sellPrice > 0 ? round2(sellPrice - buyPrice) : '';
   var roi       = sellPrice > 0 && buyPrice > 0
                   ? round1((sellPrice - buyPrice) / buyPrice * 100) + '%' : '';
 

@@ -90,6 +90,7 @@ function getDashboard() {
   var dataRows = readSheet().dataRows;
   var totalInvested = 0, totalRevenue = 0, soldInvested = 0;
   var ticketsSold = 0, activeEvents = 0;
+  var roiSum = 0, roiCount = 0;
   var breakdown = [];
 
   for (var i = 0; i < dataRows.length; i++) {
@@ -104,6 +105,8 @@ function getDashboard() {
     var rowProfit = predaj > 0 ? round2(predaj - nakup) : 0;
     var rowRoi    = nakup > 0 && predaj > 0
                     ? round1((predaj - nakup) / nakup * 100) : 0;
+
+    if (nakup > 0 && predaj > 0) { roiSum += rowRoi; roiCount++; }
 
     breakdown.push({
       artist:   String(r[1] || ''),
@@ -125,8 +128,10 @@ function getDashboard() {
     }
   }
 
-  var netProfit = totalRevenue - soldInvested;
-  var avgRoi    = soldInvested > 0 ? netProfit / soldInvested * 100 : 0;
+  // ako Excel B2-B1: od predaja odpocitame VSETKY nakupy, aj nepredane zasoby
+  var netProfit = totalRevenue - totalInvested;
+  // ako Excel J2: priemer ROI po riadkoch, nie pomer suctov
+  var avgRoi    = roiCount > 0 ? roiSum / roiCount : 0;
 
   return {
     totalInvested: round2(totalInvested),

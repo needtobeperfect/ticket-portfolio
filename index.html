@@ -1829,7 +1829,11 @@ function renderTicketsTable(tickets) {
 
   tbody.innerHTML = tickets.map(t => {
     const profit = parseFloat(t.profit) || 0;
-    const roi    = parseFloat(t.roi)    || 0;
+    // ROI pocitame z ceny. Stlpec L v Sheete je %-formatovany, takze "176.4%"
+    // sa tam ulozi ako 1.764 a parseFloat by z toho spravil 1.8 %.
+    const buy    = parseFloat(t.buyPrice)  || 0;
+    const sell   = parseFloat(t.sellPrice) || 0;
+    const roi    = buy > 0 && sell > 0 ? ((sell - buy) / buy) * 100 : 0;
     const pCls   = profit >= 0 ? 'text-green' : 'text-red';
     const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
     const ri = parseInt(t.rowIndex) || 0;

@@ -1112,12 +1112,12 @@
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
               </svg>
-              Active Events
+              Active Tickets
             </div>
             <div class="kpi-value blue" id="kpiActive">
               <span class="spinner"></span>
             </div>
-            <div class="kpi-sub">Upcoming shows</div>
+            <div class="kpi-sub">Unsold individual tickets</div>
           </div>
 
         </div><!-- /.kpi-grid -->
@@ -1138,7 +1138,7 @@
                   <th>#</th>
                   <th>Artist / Event</th>
                   <th>Country</th>
-                  <th>Tickets</th>
+                  <th>Qty (total)</th>
                   <th>Invested</th>
                   <th>Revenue</th>
                   <th>Profit</th>
@@ -1464,7 +1464,9 @@ function statusClass(s) {
   if (u === 'LISTED')             return 'badge-blue';
   if (u === 'ACTIVE')             return 'badge-blue';
   if (u === 'PENDING')            return 'badge-amber';
+  if (u === 'PARTIAL')            return 'badge-amber';
   if (u === 'PROFIT')             return 'badge-green';
+  if (u === 'SOLD')               return 'badge-green';
   if (u === 'LOSS')               return 'badge-red';
   return 'badge-gray';
 }
@@ -1752,18 +1754,23 @@ function renderDashboardTable(rows) {
   tbody.innerHTML = rows.map((r, i) => {
     const profit = parseFloat(r.profit) || 0;
     const roi    = parseFloat(r.roi)    || 0;
-    const pCls   = profit >= 0 ? 'text-green' : 'text-red';
-    const rCls   = roi    >= 0 ? 'text-green' : 'text-red';
+    const pCls   = profit > 0 ? 'text-green' : profit < 0 ? 'text-red' : '';
+    const rCls   = roi    > 0 ? 'text-green' : roi    < 0 ? 'text-red' : '';
+    const soldQty = parseInt(r.soldQty) || 0;
+    const totalQty = parseInt(r.qty) || 0;
+    const qtyTxt = soldQty > 0 && soldQty < totalQty
+      ? `${fmtInt(totalQty)} <span class="text-muted" style="font-size:.78em;">(${soldQty} sold)</span>`
+      : fmtInt(totalQty);
     return `
       <tr>
         <td class="text-muted">${i + 1}</td>
         <td class="bold truncate" style="max-width:180px;" title="${esc(r.artist)}">${esc(r.artist || '—')}</td>
         <td>${esc(r.country || '—')}</td>
-        <td class="num">${fmtInt(r.qty)}</td>
+        <td class="num">${qtyTxt}</td>
         <td class="num">${fmtEur(r.invested)}</td>
-        <td class="num">${fmtEur(r.revenue)}</td>
-        <td class="num bold ${pCls}">${fmtEur(profit)}</td>
-        <td class="num ${rCls}">${fmtPct(roi)}</td>
+        <td class="num">${r.revenue > 0 ? fmtEur(r.revenue) : '—'}</td>
+        <td class="num bold ${pCls}">${profit !== 0 ? fmtEur(profit) : '—'}</td>
+        <td class="num ${rCls}">${roi !== 0 ? fmtPct(roi) : '—'}</td>
         <td>${badge(r.status || 'ACTIVE', statusClass(r.status || 'ACTIVE'))}</td>
       </tr>`;
   }).join('');
@@ -1964,9 +1971,9 @@ function updateComputedDisplay(vals) {
     return;
   }
 
-  const { buy, sell, qty } = vals;
-  const profit = (sell * qty) - (buy * qty);
-  const roi    = buy > 0 ? (profit / (buy * qty)) * 100 : 0;
+  const { buy, sell } = vals;
+  const profit = sell - buy;
+  const roi    = buy > 0 ? (profit / buy) * 100 : 0;
 
   profEl.textContent = fmtEur(profit);
   profEl.className   = `computed-value ${profit > 0 ? 'pos' : profit < 0 ? 'neg' : ''}`;
